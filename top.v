@@ -1,42 +1,48 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 2024/12/04 00:38:15
-// Design Name: 
-// Module Name: top
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+module top (
+    input clk,                // æ—¶é’Ÿä¿¡å·
+    input rst_n,              // å¤ä½ä¿¡å·
+    input on_off_btn,         // å¼€å…³æœºæŒ‰é’®
+    input menu_btn,           // èœå•æŒ‰é’®
+    input mode1_btn,          // 1æ¡£æŒ‰é’®
+    input mode2_btn,          // 2æ¡£æŒ‰é’®
+    input mode3_btn,          // 3æ¡£æŒ‰é’®
+    output [5:0] cumulative_time,  // ç´¯è®¡å·¥ä½œæ—¶é—´ï¼ˆæ—¶:åˆ†:ç§’ï¼‰
+    output [5:0] countdown_time     // é£“é£æ¨¡å¼å€’è®¡æ—¶
+);
 
+    // çŠ¶æ€å®šä¹‰
+    reg [2:0] mode_state;  // å½“å‰æ¨¡å¼çŠ¶æ€ï¼ˆå¾…æœºã€1æ¡£ã€2æ¡£ã€3æ¡£ï¼‰
 
-module top(
-input on_off_btn,
-input menu_btn,
-input mode1_btn,
-input mode2_btn,
-input mode3_btn,
-input mode_self_clean_btn,
-output[5:0] current_time,
-output[5:0] cumulative_time,
-output[2:0] count_down_time
+    // å®ä¾‹åŒ–æ²¹çƒŸæœºæ¨¡å—
+    smoker smoker_inst (
+        .clk(clk),
+        .rst_n(rst_n),
+        .mode_state(mode_state),
+        .menu_btn(menu_btn),
+        .mode1_btn(mode1_btn),
+        .mode2_btn(mode2_btn),
+        .mode3_btn(mode3_btn),
+        .cumulative_time(cumulative_time),
+        .countdown_time(countdown_time)
     );
-    wire machine_state;
-    wire[2:0] mode_state;// 0´ı»ú 000    1Ò»µµ 001  2¶şµµ 010 3Èıµµ 011 4×ÔÇå½à 100
-    
-    // ÊµÏÖFSM½øĞĞmode_state×ª»»
-    // ÊµÀı»¯¼ÆÊ±module
-    // ÊµÀı»¯ÊıÂëÏÔÊ¾¹Ümodule
-    
-    //ÔÚ¼ÆÊ±Ä£¿éÖĞºÍÏÔÊ¾Ä£¿éÖĞ£¬¶¼Òª¸ù¾İmode_state½øĞĞÌõ¼ş¿ØÖÆ£¬Æ¥ÅäÄÄĞ©¿É½øĞĞµÄ²Ù×÷
+
+    // æ§åˆ¶æ¨¡å¼çŠ¶æ€ï¼šå¾…æœºã€1æ¡£ã€2æ¡£ã€3æ¡£ï¼ˆé€šè¿‡æŒ‰é’®æ§åˆ¶ï¼‰
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            mode_state <= 3'b000;  // é»˜è®¤å¾…æœºæ¨¡å¼
+        end else if (menu_btn) begin
+            // èœå•é”®æŒ‰ä¸‹åæ ¹æ®æŒ‰é”®åˆ‡æ¢ä¸åŒæ¨¡å¼
+            if (mode1_btn) begin
+                mode_state <= 3'b001;  // 1æ¡£æ¨¡å¼
+            end else if (mode2_btn) begin
+                mode_state <= 3'b010;  // 2æ¡£æ¨¡å¼
+            end else if (mode3_btn) begin
+                mode_state <= 3'b011;  // é£“é£æ¨¡å¼
+            end
+        end else if (mode_state != 3'b000) begin
+            // è¿”å›å¾…æœºæ¨¡å¼
+            mode_state <= 3'b000;
+        end
+    end
+
 endmodule
