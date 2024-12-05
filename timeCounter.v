@@ -19,8 +19,65 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+module countDownTimeTop(
+    input clk,
+    input rst,
+    output [7:0] digit1,
+    output [7:0] digit2,
+    output [7:0] tube_sel
+);
 
-module timeCounterTop(
+    reg [5:0] sec = 0;        // 秒数从 59 开始
+    reg [5:0] minute = 3;      // 分钟数从 3 开始（3分钟倒计时）
+    wire clk_1hz;
+    
+    // 生成1Hz时钟
+    ClockDivider1Hz ClockDivider1Hz(
+        .clk(clk),
+        .rst(rst),
+        .clk_out(clk_1hz)
+    );
+    
+    always @(posedge clk_1hz or negedge rst) begin
+        if (!rst) begin
+            minute <= 3;  // 复位时分钟数重新设置为 3
+            sec <= 0;     // 复位时秒数重新设置为 0
+        end else if (sec == 0 && minute > 0) begin
+            sec <= 59;     // 秒数归零后重置为 59
+            minute <= minute - 1; // 分钟数减 1
+        end else if (sec > 0) begin
+            sec <= sec - 1; // 每秒倒计时减 1
+        end
+    end
+
+    reg [31:0] time_data;
+    
+    // 将分钟和秒数转换为合适的时间格式（分:秒）
+    always @(minute or sec) begin
+        time_data[31:28] = 4'b0000;           // 时部分设置为 0
+        time_data[27:24] = 4'b0000;           // 时部分设置为 0
+        time_data[23:20] = 4'b1111;           // 分隔符
+        time_data[19:16] = minute / 10;       // 分钟的十位数
+        time_data[15:12] = minute % 10;       // 分钟的个位数
+        time_data[11:8]  = 4'b1111;           // 分隔符
+        time_data[7:4]   = sec / 10;          // 秒的十位数
+        time_data[3:0]   = sec % 10;          // 秒的个位数
+    end
+    
+    // 使用时间显示模块显示倒计时
+    timeDisplay timeDisplay(
+        .clk(clk),
+        .rst(rst),
+        .time_data(time_data),
+        .digit1(digit1),
+        .digit2(digit2),
+        .tube_sel(tube_sel)
+    );
+
+endmodule
+
+
+module currentTimeTop(
     input clk,
     input rst,
     output  [7:0]digit1,
@@ -29,6 +86,7 @@ module timeCounterTop(
     );
     reg [5:0] sec =0;     
     reg [5:0] min =0;     
+    reg [4:0] hr =0;     
     wire clk_1hz;
     ClockDivider1Hz ClockDivider1Hz(
             .clk(clk),
@@ -37,32 +95,38 @@ module timeCounterTop(
     );
     always @(posedge clk_1hz or negedge rst) begin
         if (!rst) begin
-            sec <= 6'd0;  
-            min <= 6'd0;  
+            sec <= 6'd0;
+            min <= 6'd0;
+            hr <= 5'd0;
         end else begin
             if (sec == 59) begin
                 sec <= 6'd0;
                 if (min == 59) begin
                     min <= 6'd0;
+                    if (hr == 23) begin
+                        hr <= 5'd0;
+                    end else begin
+                        hr <= hr + 1;
+                    end
                 end else begin
                     min <= min + 1;
                 end
             end else begin
-                sec <= sec + 1;  
+                sec <= sec + 1;
             end
         end
     end
 
     reg [31:0] time_data;
-    always @(sec or min) begin
-        time_data[31:28] = 4'b0000;
-        time_data[27:24] = 4'b0000;
-        time_data[23:20] = 4'b0000;
-        time_data[19:16] = 4'b0000;
-        time_data[15:12] = (min)%10;
-        time_data[11:8]  = 4'b0000;
-        time_data[7:4]   = (sec)/10;
-        time_data[3:0]   = (sec)%10;
+    always @(sec or min or hr) begin
+        time_data[31:28] = (hr / 10) % 10;    
+        time_data[27:24] = hr % 10;           
+        time_data[23:20] = 4'b1111;   
+        time_data[19:16] = (min / 10) % 10;
+        time_data[15:12] = min % 10;   
+        time_data[11:8]  = 4'b1111;    
+        time_data[7:4]   = (sec / 10) % 10;
+        time_data[3:0]   = sec % 10;       
     end
     
     timeDisplay timeDisplay(  .clk(clk),
@@ -137,7 +201,7 @@ module transformDigit(
             4'b1000: digit = 8'b1111_1110; //"8": abcdefg_
             4'b1001: digit = 8'b1110_0110; //"9": abc_ _ fg_
             default: 
-            digit = 8'b1001_1110;  //"E": a_ _ defg_
+            digit = 8'b0000_0010;  //"E": a_ _ defg_
         endcase
     end
 endmodule
@@ -152,7 +216,7 @@ module ClockDivider500Hz(
     input rst,       
     output reg clk_out
 );
-    parameter period = 100000;
+    parameter period = 200000;
     integer counter;  
 
     always @(posedge clk or negedge rst) begin
