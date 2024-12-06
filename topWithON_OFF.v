@@ -21,6 +21,8 @@
 
 
 module top(
+input clk,
+input reset,
 input left_btn,
 input right_btn,
 input on_off_btn,
@@ -29,25 +31,39 @@ input mode1_btn,
 input mode2_btn,
 input mode3_btn,
 input mode_self_clean_btn,
+//input clk_1hz,
 //output[5:0] current_time,
 //output[5:0] cumulative_time,
 //output[2:0] count_down_time,
 output machine_state
 //output[2:0] mode_state// 0待机 000    1一档 001  2二档 010 3三档 011 4自清洁 100
     );
-    
+    wire clk_1hz;
     // 实现FSM进行mode_state转换
     // 实例化计时module
     // 实例化数码显示管module
     
     //在计时模块中和显示模块中，都要根据mode_state进行条件控制，匹配哪些可进行的操作
     
+//    ClockDivider1Hz clk_1s(
+//    .clk(clk),
+//    .rst(reset),
+//    .clk_out(clk_1hz));
     
-    onOffControl on_off_control(.clk(clk),.reset(reset),.left_btn(left_btn),.right_btn(right_btn),.on_off_btn(on_off_btn),.machine_state(machine_state));
+    onOffControl on_off_control(
+    .clk(clk),
+//    .clk_1hz(clk_1hz),
+    .reset(reset),
+    .left_btn(left_btn),
+    .right_btn(right_btn),
+    .on_off_btn(on_off_btn),
+    .machine_state(machine_state));
+    
 endmodule
 
 module onOffControl(
 input clk,
+//input clk_1hz,
 input reset,
 input left_btn,
 input right_btn,
@@ -56,32 +72,33 @@ input on_off_btn,
 //output reg cumulative_time,
 output reg machine_state
 );
-wire clk_1hz;
-ClockDivider1Hz clk_1s(.clk(clk),.rst(reset),.clk_out(clk_1hz));
 
+wire clk_1hz;
 reg[2:0] second;
+
+ClockDivider1Hz clk_1s(.clk(clk),.rst(reset),.clk_out(clk_1hz));
 
 always @ (posedge clk_1hz) begin
     if (reset) begin
         second <= 3'b111;
+        machine_state <= 1'b0;
     end
     if (on_off_btn) begin
         if (~machine_state) begin
-            machine_state = ~machine_state;
+            machine_state <= ~machine_state;
 //            current_time = 6'b0;
 //            cumulative_time = 6'b0;
         end
         else begin
             if (second == 3'b111) second <= 3'b000;
-            else if (second >= 3'b000 & second < 3'b011) second <= second + 1'b1;
-            else if (second == 3'b011) begin
+            else if (second >= 3'b000 & second <= 3'b001) second <= second + 3'b001;
+            if (second == 3'b010) begin
                 second <= 3'b111;
-                machine_state = 1'b0;
+                machine_state <= 1'b0;
             end
         end
    end
 end
-
 
 endmodule
 
