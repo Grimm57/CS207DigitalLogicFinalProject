@@ -31,74 +31,147 @@ input mode1_btn,
 input mode2_btn,
 input mode3_btn,
 input mode_self_clean_btn,
-//input clk_1hz,
-//output[5:0] current_time,
-//output[5:0] cumulative_time,
-//output[2:0] count_down_time,
 output machine_state
-//output[2:0] mode_state// 0´ı»ú 000    1Ò»µµ 001  2¶şµµ 010 3Èıµµ 011 4×ÔÇå½à 100
+//output[2:0] mode_state// 0å¾…æœº 000    1ä¸€æ¡£ 001  2äºŒæ¡£ 010 3ä¸‰æ¡£ 011 4è‡ªæ¸…æ´ 100
     );
     wire clk_1hz;
-    // ÊµÏÖFSM½øĞĞmode_state×ª»»
-    // ÊµÀı»¯¼ÆÊ±module
-    // ÊµÀı»¯ÊıÂëÏÔÊ¾¹Ümodule
-    
-    //ÔÚ¼ÆÊ±Ä£¿éÖĞºÍÏÔÊ¾Ä£¿éÖĞ£¬¶¼Òª¸ù¾İmode_state½øĞĞÌõ¼ş¿ØÖÆ£¬Æ¥ÅäÄÄĞ©¿É½øĞĞµÄ²Ù×÷
-    
-//    ClockDivider1Hz clk_1s(
-//    .clk(clk),
-//    .rst(reset),
-//    .clk_out(clk_1hz));
+    // å®ç°FSMè¿›è¡Œmode_stateè½¬æ¢
+    // å®ä¾‹åŒ–è®¡æ—¶module
+    // å®ä¾‹åŒ–æ•°ç æ˜¾ç¤ºç®¡module
+    //åœ¨è®¡æ—¶æ¨¡å—ä¸­å’Œæ˜¾ç¤ºæ¨¡å—ä¸­ï¼Œéƒ½è¦æ ¹æ®mode_stateè¿›è¡Œæ¡ä»¶æ§åˆ¶ï¼ŒåŒ¹é…å“ªäº›å¯è¿›è¡Œçš„æ“ä½œ
+    //    ClockDivider1Hz clk_1s(
+    //    .clk(clk),
+    //    .rst(reset),
+    //    .clk_out(clk_1hz));
+    ClockDivider1Hz clock1hzzzz(.clk(clk),.rst(reset),.clk_out(clk_1hz));
     
     onOffControl on_off_control(
     .clk(clk),
-//    .clk_1hz(clk_1hz),
     .reset(reset),
     .left_btn(left_btn),
     .right_btn(right_btn),
     .on_off_btn(on_off_btn),
     .machine_state(machine_state));
     
+
+    
 endmodule
 
 module onOffControl(
 input clk,
-//input clk_1hz,
 input reset,
 input left_btn,
 input right_btn,
 input on_off_btn,
-//output reg current_time,
-//output reg cumulative_time,
-output reg machine_state
+output reg machine_state = 1'b0
 );
+parameter shutdown_time = 300_000_000;
+integer second_counter;
+reg over_shutdown;
 
-wire clk_1hz;
-reg[2:0] second;
+parameter gesture_time = 500_000_000;
+integer gesture_counter;
+reg left_begin;
+reg right_begin;
+reg left_ges;
+reg right_ges;
+reg start;
 
-ClockDivider1Hz clk_1s(.clk(clk),.rst(reset),.clk_out(clk_1hz));
-
-always @ (posedge clk_1hz) begin
-    if (reset) begin
-        second <= 3'b111;
+always @ (posedge clk or negedge reset) begin
+    if (~reset) begin
+        second_counter <= 0;
         machine_state <= 1'b0;
+        gesture_counter <= 0;
+        left_ges <= 1'b0;
+        right_ges <= 1'b0;
+        left_begin <= 1'b0;
+        right_begin <= 1'b0;
+        start <= 1'b0;
     end
-    if (on_off_btn) begin
-        if (~machine_state) begin
-            machine_state <= ~machine_state;
-//            current_time = 6'b0;
-//            cumulative_time = 6'b0;
-        end
-        else begin
-            if (second == 3'b111) second <= 3'b000;
-            else if (second >= 3'b000 & second <= 3'b001) second <= second + 3'b001;
-            if (second == 3'b010) begin
-                second <= 3'b111;
-                machine_state <= 1'b0;
+    else begin
+        if (on_off_btn) begin
+            if (~machine_state) begin
+                if(~over_shutdown) begin
+                    machine_state <= ~machine_state;
+                    second_counter <= 0;
+                    over_shutdown <= 1'b0;
+                end
+            end
+            else begin
+                if (second_counter == shutdown_time) begin
+                    machine_state <= 1'b0;
+                    second_counter <= 0;
+                    over_shutdown <= 1'b1;
+                end
+                else begin
+                    if (~over_shutdown) begin
+                        second_counter <= second_counter + 1;
+                    end
+                end
             end
         end
-   end
+        else begin
+            second_counter <= 0;
+            over_shutdown <= 1'b0;
+        end
+        
+        if (left_ges & ~right_ges & ~start) begin
+                    left_begin <= 1'b1;
+                    gesture_counter <= 0;
+                    start <= 1'b1;
+                    left_ges <= 1'b1;
+                end
+                if (right_ges & ~left_ges & ~start) begin
+                    right_begin <= 1'b1;
+                    gesture_counter <= 0;
+                    start <= 1'b1;
+                    right_ges <= 1'b1;
+                end
+                if (left_begin) begin
+                    if (gesture_counter < gesture_time) begin
+                        gesture_counter <= gesture_counter + 1;
+                        if (right_ges) begin
+                            gesture_counter <= 0;
+                            machine_state <= 1'b1;
+                            left_ges <= 1'b0;
+                            right_ges <= 1'b0;
+                            left_begin <= 1'b0;
+                            right_begin <= 1'b0;
+                            start <= 1'b0;
+                        end
+                    end else begin
+                        gesture_counter <= 0;
+                        left_ges <= 1'b0;
+                        right_ges <= 1'b0;
+                        left_begin <= 1'b0;
+                        right_begin <= 1'b0;
+                        start <= 1'b0;
+                    end
+                end
+                if (right_begin) begin
+                    if (gesture_counter < gesture_time) begin
+                        gesture_counter <= gesture_counter + 1;
+                        if (left_ges) begin
+                            gesture_counter <= 0;
+                            machine_state <= 1'b0;
+                            left_ges <= 1'b0;
+                            right_ges <= 1'b0;
+                            left_begin <= 1'b0;
+                            right_begin <= 1'b0;
+                            start <= 1'b0;
+                        end
+                    end else begin
+                        gesture_counter <= 0;
+                        left_ges <= 1'b0;
+                        right_ges <= 1'b0;
+                        left_begin <= 1'b0;
+                        right_begin <= 1'b0;
+                        start <= 1'b0;
+                    end
+                end
+    end
 end
+
 
 endmodule
 
