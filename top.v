@@ -1,71 +1,72 @@
 module top (
-    input clk,                    // æ—¶é’Ÿä¿¡å·
-    input rst,                  // å¤ä½ä¿¡å·
-    input on_off_btn,             // å¼€å…³æœºæŒ‰é’®
-    input menu_btn,               // èœå•æŒ‰é’®
-    input mode1_btn,              // 1æ¡£æŒ‰é’®
-    input mode2_btn,              // 2æ¡£æŒ‰é’®
-    input mode3_btn,              // 3æ¡£æŒ‰é’®
-    output [7:0] digit1,          // æ•°ç ç®¡æ˜¾ç¤ºçš„æ•°å­—1
-    output [7:0] digit2,          // æ•°ç ç®¡æ˜¾ç¤ºçš„æ•°å­—2
-    output [7:0] tube_sel,         // æ•°ç ç®¡é€‰æ‹©ä¿¡å·
+    input clk,                    // Ê±ÖÓĞÅºÅ
+    input rst,                  // ¸´Î»ĞÅºÅ
+    input on_off_btn,             // ¿ª¹Ø»ú°´Å¥
+    input menu_btn,               // ²Ëµ¥°´Å¥
+    input mode1_btn,              // 1µµ°´Å¥
+    input mode2_btn,              // 2µµ°´Å¥
+    input mode3_btn,              // 3µµ°´Å¥
+    output [7:0] digit1,          // ÊıÂë¹ÜÏÔÊ¾µÄÊı×Ö1
+    output [7:0] digit2,          // ÊıÂë¹ÜÏÔÊ¾µÄÊı×Ö2
+    output [7:0] tube_sel,         // ÊıÂë¹ÜÑ¡ÔñĞÅºÅ
     output [4:0] led
 );
 
-    // æ§åˆ¶æ¨¡å¼çŠ¶æ€ï¼ˆå¾…æœºã€1æ¡£ã€2æ¡£ã€3æ¡£æ¨¡å¼ï¼‰
-    reg [2:0] mode_state;         // å½“å‰æ¨¡å¼çŠ¶æ€ï¼ˆ0: å¾…æœº, 1: 1æ¡£, 2: 2æ¡£, 3: é£“é£æ¨¡å¼ï¼‰
-    reg is_on;                    // è®¾å¤‡å¼€å…³çŠ¶æ€
+    // ¿ØÖÆÄ£Ê½×´Ì¬£¨´ı»ú¡¢1µµ¡¢2µµ¡¢3µµÄ£Ê½£©
+    reg [2:0] mode_state;         // µ±Ç°Ä£Ê½×´Ì¬£¨0: ´ı»ú, 1: 1µµ, 2: 2µµ, 3: ì«·çÄ£Ê½£©
+    reg is_on;                    // Éè±¸¿ª¹Ø×´Ì¬
 
-    // å®ä¾‹åŒ–æ²¹çƒŸæœºæ¨¡å—
+    // ÊµÀı»¯ÓÍÑÌ»úÄ£¿é
     smoker smoker_inst (
         .clk(clk),
         .rst(rst),
-        .mode_state(mode_state),  // ä¼ é€’æ¨¡å¼çŠ¶æ€
+        .mode_state(mode_state),  // ´«µİÄ£Ê½×´Ì¬
         .menu_btn(menu_btn),
         .mode1_btn(mode1_btn),
         .mode2_btn(mode2_btn),
         .mode3_btn(mode3_btn),
-        .digit1(digit1),                // æ•°ç ç®¡æ˜¾ç¤ºçš„æ•°å­—1
-        .digit2(digit2),                // æ•°ç ç®¡æ˜¾ç¤ºçš„æ•°å­—2
-        .tube_sel(tube_sel)            // æ•°ç ç®¡é€‰æ‹©ä¿¡å·
+        .digit1(digit1),                // ÊıÂë¹ÜÏÔÊ¾µÄÊı×Ö1
+        .digit2(digit2),                // ÊıÂë¹ÜÏÔÊ¾µÄÊı×Ö2
+        .tube_sel(tube_sel)            // ÊıÂë¹ÜÑ¡ÔñĞÅºÅ
     );
 
+    
     always @(posedge clk or negedge rst) begin
     if (!rst) begin
-        mode_state <= 3'b000;  // é»˜è®¤å¾…æœºæ¨¡å¼
-        is_on <= 0;            // åˆå§‹å…³é—­
+        mode_state <= 3'b000;  // Ä¬ÈÏ´ı»úÄ£Ê½
+        is_on <= 0;            // ³õÊ¼¹Ø±Õ
     end else begin
         if (on_off_btn && !is_on) begin
-            // åˆ‡æ¢å¼€å…³æœºçŠ¶æ€
+            // ÇĞ»»¿ª¹Ø»ú×´Ì¬
             is_on <= 1;
         end else if (!on_off_btn) begin
-            // è®¾å¤‡å…³é—­æ—¶ï¼Œå§‹ç»ˆä¿æŒå¾…æœºçŠ¶æ€
+            // Éè±¸¹Ø±ÕÊ±£¬Ê¼ÖÕ±£³Ö´ı»ú×´Ì¬
             is_on <= 0;
         end
 
         if (is_on) begin
-            // è®¾å¤‡å¼€å¯æ—¶ï¼ŒæŒ‰èœå•æŒ‰é’®åˆ‡æ¢é£åŠ›æ¨¡å¼
+            // Éè±¸¿ªÆôÊ±£¬°´²Ëµ¥°´Å¥ÇĞ»»·çÁ¦Ä£Ê½
             if (menu_btn) begin
                 if (mode1_btn) begin
-                    mode_state <= 3'b001;  // 1æ¡£æ¨¡å¼
+                    mode_state <= 3'b001;  // 1µµÄ£Ê½
                 end else if (mode2_btn) begin
-                    mode_state <= 3'b010;  // 2æ¡£æ¨¡å¼
+                    mode_state <= 3'b010;  // 2µµÄ£Ê½
                 end else if (mode3_btn) begin
-                    mode_state <= 3'b011;  // é£“é£æ¨¡å¼
+                    mode_state <= 3'b011;  // ì«·çÄ£Ê½
                 end
             end
         end else begin
-            // è®¾å¤‡å…³é—­æ—¶ï¼Œå§‹ç»ˆä¿æŒå¾…æœºçŠ¶æ€
+            // Éè±¸¹Ø±ÕÊ±£¬Ê¼ÖÕ±£³Ö´ı»ú×´Ì¬
             mode_state <= 3'b000;
         end
     end
 end
 
     
-       assign led[0] = is_on;             // ç¬¬ä¸€ä¸ªLEDï¼šè¡¨ç¤ºå¼€æœºçŠ¶æ€
-       assign led[1] = menu_btn;          // ç¬¬äºŒä¸ªLEDï¼šè¡¨ç¤ºæŒ‰ä¸‹èœå•æŒ‰é’®
-       assign led[2] = mode1_btn;         // ç¬¬ä¸‰ä¸ªLEDï¼šè¡¨ç¤ºæŒ‰ä¸‹1æ¡£æŒ‰é’®
-       assign led[3] = mode2_btn;         // ç¬¬å››ä¸ªLEDï¼šè¡¨ç¤ºæŒ‰ä¸‹2æ¡£æŒ‰é’®
-       assign led[4] = mode3_btn;         // ç¬¬äº”ä¸ªLEDï¼šè¡¨ç¤ºæŒ‰ä¸‹3æ¡£æŒ‰é’®
+       assign led[0] = is_on;             // µÚÒ»¸öLED£º±íÊ¾¿ª»ú×´Ì¬
+       assign led[1] = menu_btn;          // µÚ¶ş¸öLED£º±íÊ¾°´ÏÂ²Ëµ¥°´Å¥
+       assign led[2] = mode1_btn;         // µÚÈı¸öLED£º±íÊ¾°´ÏÂ1µµ°´Å¥
+       assign led[3] = mode2_btn;         // µÚËÄ¸öLED£º±íÊ¾°´ÏÂ2µµ°´Å¥
+       assign led[4] = mode3_btn;         // µÚÎå¸öLED£º±íÊ¾°´ÏÂ3µµ°´Å¥
 
 endmodule

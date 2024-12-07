@@ -1,200 +1,169 @@
 module smoker (
-    input clk,                    // åŸå§‹æ—¶é’Ÿä¿¡å·ï¼ˆä¾‹å¦‚500Hzï¼‰
-    input rst,                    // å¤ä½ä¿¡å·
-    input [2:0] mode_state,       // å½“å‰å·¥ä½œæ¨¡å¼è¾“å…¥ï¼ˆ0ï¼šå¾…æœºï¼Œ1ï¼š1æ¡£ï¼Œ2ï¼š2æ¡£ï¼Œ3ï¼š3æ¡£ï¼‰
-    input menu_btn,               // èœå•æŒ‰é’®
-    input mode1_btn,              // 1æ¡£æŒ‰é’®
-    input mode2_btn,              // 2æ¡£æŒ‰é’®
-    input mode3_btn,              // 3æ¡£æŒ‰é’®
-    output [7:0] digit1,          // æ•°ç ç®¡æ˜¾ç¤ºçš„æ•°å­—1
-    output [7:0] digit2,          // æ•°ç ç®¡æ˜¾ç¤ºçš„æ•°å­—2
-    output reg [7:0] tube_sel         // æ•°ç ç®¡é€‰æ‹©ä¿¡å·
+    input clk,                    // Ô­Ê¼Ê±ÖÓĞÅºÅ£¨ÀıÈç500Hz£©
+    input rst,                    // ¸´Î»ĞÅºÅ
+    input [2:0] mode_state,       // µ±Ç°¹¤×÷Ä£Ê½ÊäÈë£¨0£º´ı»ú£¬1£º1µµ£¬2£º2µµ£¬3£º3µµ£©
+    input menu_btn,               // ²Ëµ¥°´Å¥
+    input mode1_btn,              // 1µµ°´Å¥
+    input mode2_btn,              // 2µµ°´Å¥
+    input mode3_btn,              // 3µµ°´Å¥
+    output [7:0] digit1,          // ÊıÂë¹ÜÏÔÊ¾µÄÊı×Ö1
+    output [7:0] digit2,          // ÊıÂë¹ÜÏÔÊ¾µÄÊı×Ö2
+    output [7:0] tube_sel         // ÊıÂë¹ÜÑ¡ÔñĞÅºÅ
 );
 
   wire clk_1hz;
     ClockDivider1Hz u_clk_divider (
         .clk(clk),
         .rst(rst),
-        .clk_out(clk_1hz)   // è¾“å‡º 1Hz æ—¶é’Ÿ
+        .clk_out(clk_1hz)   // Êä³ö 1Hz Ê±ÖÓ
     );
     
-    // æ§åˆ¶é£åŠ›æ¨¡å¼
-    reg [2:0] wind_mode;           // å½“å‰é£åŠ›æ¡£ä½ï¼Œ0: å¾…æœºï¼Œ1: 1æ¡£ï¼Œ2: 2æ¡£ï¼Œ3: 3æ¡£ï¼ˆé£“é£æ¨¡å¼ï¼‰
-    reg is_in_hurricane_mode;      // æ˜¯å¦åœ¨é£“é£æ¨¡å¼ä¸­
-    reg hurricane_mode_enabled;    // é£“é£æ¨¡å¼æ˜¯å¦å¯ç”¨ï¼ˆåªèƒ½ä½¿ç”¨ä¸€æ¬¡ï¼‰
+    // ¿ØÖÆ·çÁ¦Ä£Ê½
+    reg [2:0] wind_mode;           // µ±Ç°·çÁ¦µµÎ»£¬0: ´ı»ú£¬1: 1µµ£¬2: 2µµ£¬3: 3µµ£¨ì«·çÄ£Ê½£©
+    reg is_in_hurricane_mode;      // ÊÇ·ñÔÚì«·çÄ£Ê½ÖĞ
+    reg hurricane_mode_enabled;    // ì«·çÄ£Ê½ÊÇ·ñÆôÓÃ£¨Ö»ÄÜÊ¹ÓÃÒ»´Î£©
 
-    // è®¡æ—¶ä¿¡å·
-    reg [5:0] cumulative_time_min; // ç´¯è®¡åˆ†é’Ÿ
-    reg [5:0] cumulative_time_sec; // ç´¯è®¡ç§’æ•°
-    reg [5:0] cumulative_time_hr; 
-    reg [5:0] countdown_time_min;  // å€’è®¡æ—¶åˆ†é’Ÿ
-    reg [5:0] countdown_time_sec;  // å€’è®¡æ—¶ç§’æ•°
+    // ¼ÆÊ±ĞÅºÅ
+    reg [5:0] cumulative_time_min; // ÀÛ¼Æ·ÖÖÓ
+    reg [5:0] cumulative_time_sec; // ÀÛ¼ÆÃëÊı
+    reg [5:0] countdown_time_min;  // µ¹¼ÆÊ±·ÖÖÓ
+    reg [5:0] countdown_time_sec;  // µ¹¼ÆÊ±ÃëÊı
 
-
-    // æ§åˆ¶é£åŠ›æ¨¡å¼
+    // ¿ØÖÆ·çÁ¦Ä£Ê½
     always @(posedge clk_1hz or negedge rst) begin
         if (!rst) begin
-            wind_mode <= 0;  // é»˜è®¤å¾…æœºæ¨¡å¼
+            wind_mode <= 0;  // Ä¬ÈÏ´ı»úÄ£Ê½
             cumulative_time_sec <= 0;
             cumulative_time_min <= 0;
-            cumulative_time_hr <=0;
             countdown_time_sec <= 0;
             countdown_time_min <= 0;
             is_in_hurricane_mode <= 0;
-            hurricane_mode_enabled <= 1;
+            hurricane_mode_enabled <= 0;
         end else begin
             case (wind_mode)
-                3'b000: begin // å¾…æœºæ¨¡å¼
-                    // ä¸è¿›è¡Œä»»ä½•è®¡æ—¶
+                3'b000: begin // ´ı»úÄ£Ê½
+                    // ²»½øĞĞÈÎºÎ¼ÆÊ±
                 end
-                3'b001: begin // 1æ¡£é£åŠ›æ¨¡å¼
+                3'b001: begin // 1µµ·çÁ¦Ä£Ê½
                     if (cumulative_time_sec == 59) begin
-                cumulative_time_sec <= 6'd0;
-                if (cumulative_time_min == 59) begin
-                    cumulative_time_min <= 6'd0;
-                    if (cumulative_time_hr == 23) begin
-                        cumulative_time_hr <= 5'd0;
+                        cumulative_time_sec <= 0;
+                        if (cumulative_time_min == 59) begin
+                            cumulative_time_min <= 0;
+                        end else begin
+                            cumulative_time_min <= cumulative_time_min + 1;
+                        end
                     end else begin
-                        cumulative_time_hr <= cumulative_time_hr + 1;
+                        cumulative_time_sec <= cumulative_time_sec + 1;
                     end
-                end else begin
-                    cumulative_time_min <= cumulative_time_min + 1;
                 end
-                end else begin
-                cumulative_time_sec <= cumulative_time_sec + 1;
-                end
-                end
-                3'b010: begin // 2æ¡£é£åŠ›æ¨¡å¼
+                3'b010: begin // 2µµ·çÁ¦Ä£Ê½
                     if (cumulative_time_sec == 59) begin
-                cumulative_time_sec <= 6'd0;
-                if (cumulative_time_min == 59) begin
-                    cumulative_time_min <= 6'd0;
-                    if (cumulative_time_hr == 23) begin
-                        cumulative_time_hr <= 5'd0;
+                        cumulative_time_sec <= 0;
+                        if (cumulative_time_min == 59) begin
+                            cumulative_time_min <= 0;
+                        end else begin
+                            cumulative_time_min <= cumulative_time_min + 1;
+                        end
                     end else begin
-                        cumulative_time_hr <= cumulative_time_hr + 1;
+                        cumulative_time_sec <= cumulative_time_sec + 1;
                     end
-                end else begin
-                    cumulative_time_min <= cumulative_time_min + 1;
                 end
-                end else begin
-                cumulative_time_sec <= cumulative_time_sec + 1;
-                end
-                end
-                3'b011: begin // é£“é£æ¨¡å¼
+                3'b011: begin // ì«·çÄ£Ê½
                     if (is_in_hurricane_mode) begin
-                         if (countdown_time_sec == 0 && countdown_time_min > 0) begin
-                            countdown_time_sec <= 59;     // ç§’æ•°å½’é›¶åé‡ç½®ä¸º 59
-                            countdown_time_min <= countdown_time_min - 1; // åˆ†é’Ÿæ•°å‡ 1
-                            end else if (countdown_time_sec > 0) begin
-                                countdown_time_sec <= countdown_time_sec - 1; // æ¯ç§’å€’è®¡æ—¶å‡ 1
-                                end
-                                end
+                        if (countdown_time_sec == 0 && countdown_time_min == 0) begin
+                            wind_mode <= 2;  // µ¹¼ÆÊ±½áÊø£¬×Ô¶¯ÇĞ»»µ½2µµ
+                            is_in_hurricane_mode <= 0;
+                        end else if (countdown_time_sec == 0) begin
+                            if (countdown_time_min > 0) begin
+                                countdown_time_min <= countdown_time_min - 1;
+                                countdown_time_sec <= 59;
+                            end
+                        end else begin
+                            countdown_time_sec <= countdown_time_sec - 1;
+                        end
+                    end
                 end
                 default: begin
-                    wind_mode <= 0;  // é»˜è®¤å¾…æœºæ¨¡å¼
+                    wind_mode <= 0;  // Ä¬ÈÏ´ı»úÄ£Ê½
                 end
             endcase
         end
     end
 
-    // æ§åˆ¶é£åŠ›æ¨¡å¼è¾“å…¥
+    // ¿ØÖÆ·çÁ¦Ä£Ê½ÊäÈë
     always @(posedge clk_1hz) begin
         if (mode_state == 3'b000) begin
-            // å¾…æœºæ¨¡å¼
+            // ´ı»úÄ£Ê½
             wind_mode <= 0;
         end else if (mode_state == 3'b001) begin
-            // 1æ¡£é£åŠ›
+            // 1µµ·çÁ¦
             wind_mode <= 1;
         end else if (mode_state == 3'b010) begin
-            // 2æ¡£é£åŠ›
+            // 2µµ·çÁ¦
             wind_mode <= 2;
         end else if (mode_state == 3'b011 && hurricane_mode_enabled) begin
-            // é£“é£æ¨¡å¼
+            // ì«·çÄ£Ê½
             wind_mode <= 3;
             is_in_hurricane_mode <= 1;
-            countdown_time_min <= 1;  // è®¾ç½®1åˆ†é’Ÿå€’è®¡æ—¶
+            countdown_time_min <= 1;  // ÉèÖÃ1·ÖÖÓµ¹¼ÆÊ±
             countdown_time_sec <= 0;
-            hurricane_mode_enabled <= 0;  // åªèƒ½ä½¿ç”¨ä¸€æ¬¡
+            hurricane_mode_enabled <= 0;  // Ö»ÄÜÊ¹ÓÃÒ»´Î
         end
     end
 
-    // å°†ç´¯è®¡æ—¶é—´è½¬æ¢ä¸ºtime_dataæ ¼å¼
+    // ½«ÀÛ¼ÆÊ±¼ä×ª»»Îªtime_data¸ñÊ½
     reg [31:0] cumulative_time_data;
     always @(cumulative_time_min or cumulative_time_sec) begin
-        cumulative_time_data[31:28] = 4'b0000;           // æ—¶éƒ¨åˆ†è®¾ç½®ä¸º 0
-        cumulative_time_data[27:24] = 4'b0000;           // æ—¶éƒ¨åˆ†è®¾ç½®ä¸º 0
-        cumulative_time_data[23:20] = 4'b1111;           // åˆ†éš”ç¬¦
-        cumulative_time_data[19:16] = cumulative_time_min / 10;       // åˆ†é’Ÿçš„åä½æ•°
-        cumulative_time_data[15:12] = cumulative_time_min % 10;       // åˆ†é’Ÿçš„ä¸ªä½æ•°
-        cumulative_time_data[11:8]  = 4'b1111;           // åˆ†éš”ç¬¦
-        cumulative_time_data[7:4]   = cumulative_time_sec / 10;          // ç§’çš„åä½æ•°
-        cumulative_time_data[3:0]   = cumulative_time_sec % 10;          // ç§’çš„ä¸ªä½æ•°
+        cumulative_time_data[31:28] = 4'b0000;           // Ê±²¿·ÖÉèÖÃÎª 0
+        cumulative_time_data[27:24] = 4'b0000;           // Ê±²¿·ÖÉèÖÃÎª 0
+        cumulative_time_data[23:20] = 4'b1111;           // ·Ö¸ô·û
+        cumulative_time_data[19:16] = cumulative_time_min / 10;       // ·ÖÖÓµÄÊ®Î»Êı
+        cumulative_time_data[15:12] = cumulative_time_min % 10;       // ·ÖÖÓµÄ¸öÎ»Êı
+        cumulative_time_data[11:8]  = 4'b1111;           // ·Ö¸ô·û
+        cumulative_time_data[7:4]   = cumulative_time_sec / 10;          // ÃëµÄÊ®Î»Êı
+        cumulative_time_data[3:0]   = cumulative_time_sec % 10;          // ÃëµÄ¸öÎ»Êı
     end
 
-    // å°†å€’è®¡æ—¶è½¬æ¢ä¸ºtime_dataæ ¼å¼
+    // ½«µ¹¼ÆÊ±×ª»»Îªtime_data¸ñÊ½
     reg [31:0] countdown_time_data;
     always @(countdown_time_min or countdown_time_sec) begin
-        countdown_time_data[31:28] = 4'b0000;           // æ—¶éƒ¨åˆ†è®¾ç½®ä¸º 0
-        countdown_time_data[27:24] = 4'b0000;           // æ—¶éƒ¨åˆ†è®¾ç½®ä¸º 0
-        countdown_time_data[23:20] = 4'b1111;           // åˆ†éš”ç¬¦
-        countdown_time_data[19:16] = countdown_time_min / 10;       // åˆ†é’Ÿçš„åä½æ•°
-        countdown_time_data[15:12] = countdown_time_min % 10;       // åˆ†é’Ÿçš„ä¸ªä½æ•°
-        countdown_time_data[11:8]  = 4'b1111;           // åˆ†éš”ç¬¦
-        countdown_time_data[7:4]   = countdown_time_sec / 10;          // ç§’çš„åä½æ•°
-        countdown_time_data[3:0]   = countdown_time_sec % 10;          // ç§’çš„ä¸ªä½æ•°
+        countdown_time_data[31:28] = 4'b0000;           // Ê±²¿·ÖÉèÖÃÎª 0
+        countdown_time_data[27:24] = 4'b0000;           // Ê±²¿·ÖÉèÖÃÎª 0
+        countdown_time_data[23:20] = 4'b1111;           // ·Ö¸ô·û
+        countdown_time_data[19:16] = countdown_time_min / 10;       // ·ÖÖÓµÄÊ®Î»Êı
+        countdown_time_data[15:12] = countdown_time_min % 10;       // ·ÖÖÓµÄ¸öÎ»Êı
+        countdown_time_data[11:8]  = 4'b1111;           // ·Ö¸ô·û
+        countdown_time_data[7:4]   = countdown_time_sec / 10;          // ÃëµÄÊ®Î»Êı
+        countdown_time_data[3:0]   = countdown_time_sec % 10;          // ÃëµÄ¸öÎ»Êı
     end
 
-    // æ§åˆ¶æ˜¾ç¤ºåˆ‡æ¢
-    reg display_select;  // ç”¨äºé€‰æ‹©æ˜¾ç¤ºå“ªä¸ªæ—¶é—´ï¼ˆ0: ç´¯è®¡æ—¶é—´, 1: å€’è®¡æ—¶ï¼‰
+    // ¿ØÖÆÏÔÊ¾ÇĞ»»
+    reg display_select;  // ÓÃÓÚÑ¡ÔñÏÔÊ¾ÄÄ¸öÊ±¼ä£¨0: ÀÛ¼ÆÊ±¼ä, 1: µ¹¼ÆÊ±£©
     always @(posedge clk_1hz or negedge rst) begin
         if (!rst) begin
-            display_select <= 0;  // å¤ä½æ—¶ï¼Œé»˜è®¤æ˜¾ç¤ºç´¯è®¡æ—¶é—´
+            display_select <= 0;  // ¸´Î»Ê±£¬Ä¬ÈÏÏÔÊ¾ÀÛ¼ÆÊ±¼ä
         end else if (wind_mode == 3'b010 || wind_mode == 3'b001) begin
-            display_select <= 0;  // æ˜¾ç¤ºç´¯è®¡æ—¶é—´
+            display_select <= 0;  // ÏÔÊ¾ÀÛ¼ÆÊ±¼ä
         end else if (wind_mode == 3'b011) begin
-            display_select <= 1;  // åœ¨é£“é£æ¨¡å¼ä¸‹æ˜¾ç¤ºå€’è®¡æ—¶
+            display_select <= 1;  // ÔÚì«·çÄ£Ê½ÏÂÏÔÊ¾µ¹¼ÆÊ±
         end
     end
 
 
-    // æ ¹æ®æ˜¾ç¤ºé€‰æ‹©è¾“å‡ºç›¸åº”çš„æ—¶é—´æ•°æ®
-    wire [31:0] time_data;
-    assign time_data = (display_select == 0) ? cumulative_time_data : countdown_time_data;
+    // ¸ù¾İÏÔÊ¾Ñ¡ÔñÊä³öÏàÓ¦µÄÊ±¼äÊı¾İ
+    wire [31:0] display_data;
+    assign display_data = (display_select == 0) ? cumulative_time_data : countdown_time_data;
 
-    always @(posedge clk_1hz or negedge rst) 
-        begin
-        if(!rst) begin
-        tube_sel<=8'b00000001;
-        end else begin   
-        tube_sel<={tube_sel[6:0],tube_sel[7]};
-        end
-        end
-    reg [3:0] in_b4;
-    always @(tube_sel or time_data) 
-        begin
-        case(tube_sel)
-            8'b00000001:in_b4=time_data[3:0];
-            8'b00000010:in_b4=time_data[7:4];
-            8'b00000100:in_b4=time_data[11:8];
-            8'b00001000:in_b4=time_data[15:12];
-            8'b00010000:in_b4=time_data[19:16];
-            8'b00100000:in_b4=time_data[23:20];
-            8'b01000000:in_b4=time_data[27:24];
-            8'b10000000:in_b4=time_data[31:28];
-        default:in_b4=4'hf;
-        endcase
-        end
-
-        transformDigit transformDigit1(
-        .in_b4(in_b4),
-        .digit(digit1)
-    ); 
-    transformDigit transformDigit2(
-        .in_b4(in_b4),
-        .digit(digit2)
+    // ÊµÀı»¯timeDisplayÄ£¿é
+    timeDisplay u_time_display (
+        .clk(clk_1hz),   // Ê¹ÓÃ1HzÊ±ÖÓ
+        .rst(rst),
+        .time_data(display_data),
+        .digit1(digit1),
+        .digit2(digit2),
+        .tube_sel(tube_sel)
     );
     
-    
+
 
 endmodule
