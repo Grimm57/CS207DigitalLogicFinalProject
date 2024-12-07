@@ -36,10 +36,28 @@ module smoker (
             cumulative_time_sec <= 0;
             cumulative_time_min <= 0;
             countdown_time_sec <= 0;
-            countdown_time_min <= 0;
+            countdown_time_min <= 1;
             is_in_hurricane_mode <= 0;
-            hurricane_mode_enabled <= 0;
+            hurricane_mode_enabled <= 1;
         end else begin
+            if (mode_state == 3'b000) begin
+            // 待机模式
+            wind_mode <= 0;
+        end else if (mode_state == 3'b001) begin
+            // 1档风力
+            wind_mode <= 1;
+        end else if (mode_state == 3'b010) begin
+            // 2档风力
+            wind_mode <= 2;
+        end else if (mode_state == 3'b011 && hurricane_mode_enabled) begin
+            // 飓风模式
+            wind_mode <= 3;
+            is_in_hurricane_mode <= 1;
+            countdown_time_min <= 1;  // 设置1分钟倒计时
+            countdown_time_sec <= 0;
+            hurricane_mode_enabled <= 0;  // 只能使用一次
+        end
+
             case (wind_mode)
                 3'b000: begin // 待机模式
                     // 不进行任何计时
@@ -90,30 +108,10 @@ module smoker (
         end
     end
 
-    // 控制风力模式输入
-    always @(posedge clk_1hz) begin
-        if (mode_state == 3'b000) begin
-            // 待机模式
-            wind_mode <= 0;
-        end else if (mode_state == 3'b001) begin
-            // 1档风力
-            wind_mode <= 1;
-        end else if (mode_state == 3'b010) begin
-            // 2档风力
-            wind_mode <= 2;
-        end else if (mode_state == 3'b011 && hurricane_mode_enabled) begin
-            // 飓风模式
-            wind_mode <= 3;
-            is_in_hurricane_mode <= 1;
-            countdown_time_min <= 1;  // 设置1分钟倒计时
-            countdown_time_sec <= 0;
-            hurricane_mode_enabled <= 0;  // 只能使用一次
-        end
-    end
 
     // 将累计时间转换为time_data格式
     reg [31:0] cumulative_time_data;
-    always @(cumulative_time_min or cumulative_time_sec) begin
+    always @(posedge clk_1hz) begin
         cumulative_time_data[31:28] = 4'b0000;           // 时部分设置为 0
         cumulative_time_data[27:24] = 4'b0000;           // 时部分设置为 0
         cumulative_time_data[23:20] = 4'b1111;           // 分隔符
@@ -126,7 +124,7 @@ module smoker (
 
     // 将倒计时转换为time_data格式
     reg [31:0] countdown_time_data;
-    always @(countdown_time_min or countdown_time_sec) begin
+    always @(posedge clk_1hz) begin
         countdown_time_data[31:28] = 4'b0000;           // 时部分设置为 0
         countdown_time_data[27:24] = 4'b0000;           // 时部分设置为 0
         countdown_time_data[23:20] = 4'b1111;           // 分隔符
@@ -151,18 +149,26 @@ module smoker (
 
 
     // 根据显示选择输出相应的时间数据
-    wire [31:0] display_data;
-    assign display_data = (display_select == 0) ? cumulative_time_data : countdown_time_data;
+    reg [31:0] display_data;
+    always @(display_select)begin
+        if(display_select)begin
+            display_data=countdown_time_data;
+        end else begin
+            display_data=cumulative_time_data;
+        end
+    end
+    
 
     // 实例化timeDisplay模块
     timeDisplay u_time_display (
-        .clk(clk_1hz),   // 使用1Hz时钟
+        .clk(clk),   
         .rst(rst),
         .time_data(display_data),
         .digit1(digit1),
         .digit2(digit2),
         .tube_sel(tube_sel)
     );
+
     
 
 

@@ -14,7 +14,6 @@ module top (
 
     // 控制模式状态（待机、1档、2档、3档模式）
     reg [2:0] mode_state;         // 当前模式状态（0: 待机, 1: 1档, 2: 2档, 3: 飓风模式）
-    reg is_on;                    // 设备开关状态
 
     // 实例化油烟机模块
     smoker smoker_inst (
@@ -27,24 +26,15 @@ module top (
         .mode3_btn(mode3_btn),
         .digit1(digit1),                // 数码管显示的数字1
         .digit2(digit2),                // 数码管显示的数字2
-        .tube_sel(tube_sel)            // 数码管选择信号
+        .tube_sel(tube_sel)           // 数码管选择信号
     );
 
     
     always @(posedge clk or negedge rst) begin
     if (!rst) begin
         mode_state <= 3'b000;  // 默认待机模式
-        is_on <= 0;            // 初始关闭
     end else begin
-        if (on_off_btn && !is_on) begin
-            // 切换开关机状态
-            is_on <= 1;
-        end else if (!on_off_btn) begin
-            // 设备关闭时，始终保持待机状态
-            is_on <= 0;
-        end
-
-        if (is_on) begin
+        if (on_off_btn) begin
             // 设备开启时，按菜单按钮切换风力模式
             if (menu_btn) begin
                 if (mode1_btn) begin
@@ -62,11 +52,11 @@ module top (
     end
 end
 
+assign led[0] = on_off_btn;           // 第一个LED：表示开机状态（只有开机时会亮）
+       assign led[1] = (on_off_btn && menu_btn);  // 第二个LED：表示按下菜单按钮（只有开机时才响应）
+       assign led[2] = (on_off_btn && mode1_btn); // 第三个LED：表示按下1档按钮（只有开机时才响应）
+       assign led[3] = (on_off_btn && mode2_btn); // 第四个LED：表示按下2档按钮（只有开机时才响应）
+       assign led[4] = (on_off_btn && mode3_btn); // 第五个LED：表示按下3档按钮（只有开机时才响应
     
-       assign led[0] = is_on;             // 第一个LED：表示开机状态
-       assign led[1] = menu_btn;          // 第二个LED：表示按下菜单按钮
-       assign led[2] = mode1_btn;         // 第三个LED：表示按下1档按钮
-       assign led[3] = mode2_btn;         // 第四个LED：表示按下2档按钮
-       assign led[4] = mode3_btn;         // 第五个LED：表示按下3档按钮
 
 endmodule
