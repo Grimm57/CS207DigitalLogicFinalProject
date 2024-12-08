@@ -95,6 +95,13 @@ always @ (posedge clk or negedge reset) begin
                     machine_state <= ~machine_state;
                     second_counter <= 0;
                     over_shutdown <= 1'b0;
+
+                    gesture_counter <= 0;
+                    left_ges <= 1'b0;
+                    right_ges <= 1'b0;
+                    left_begin <= 1'b0;
+                    right_begin <= 1'b0;
+                    start <= 1'b0;
                 end
             end
             else begin
@@ -102,6 +109,13 @@ always @ (posedge clk or negedge reset) begin
                     machine_state <= 1'b0;
                     second_counter <= 0;
                     over_shutdown <= 1'b1;
+
+                    gesture_counter <= 0;
+                    left_ges <= 1'b0;
+                    right_ges <= 1'b0;
+                    left_begin <= 1'b0;
+                    right_begin <= 1'b0;
+                    start <= 1'b0;
                 end
                 else begin
                     if (~over_shutdown) begin
@@ -115,60 +129,66 @@ always @ (posedge clk or negedge reset) begin
             over_shutdown <= 1'b0;
         end
         
-        if (left_ges & ~right_ges & ~start) begin
-                    left_begin <= 1'b1;
+        if (left_btn & ~right_ges & ~left_ges & ~start) begin
+            left_begin <= 1'b1;
+            gesture_counter <= 0;
+            start <= 1'b1;
+            left_ges <= 1'b1;
+        end
+        if (right_btn & ~left_ges & ~right_ges & ~start) begin
+            right_begin <= 1'b1;
+            gesture_counter <= 0;
+            start <= 1'b1;
+            right_ges <= 1'b1;
+        end
+        if (left_begin) begin
+            if (gesture_counter < gesture_time) begin
+                gesture_counter <= gesture_counter + 1;
+                if (right_btn) begin
                     gesture_counter <= 0;
-                    start <= 1'b1;
-                    left_ges <= 1'b1;
+                    machine_state <= 1'b1;
+                    left_ges <= 1'b0;
+                    right_ges <= 1'b0;
+                    left_begin <= 1'b0;
+                    right_begin <= 1'b0;
+                    start <= 1'b0;
+                    
+                    second_counter <= 0;
+                    over_shutdown <= 1'b0;
                 end
-                if (right_ges & ~left_ges & ~start) begin
-                    right_begin <= 1'b1;
+            end else begin
+                gesture_counter <= 0;
+                left_ges <= 1'b0;
+                right_ges <= 1'b0;
+                left_begin <= 1'b0;
+                right_begin <= 1'b0;
+                start <= 1'b0;
+            end
+        end
+        if (right_begin) begin
+            if (gesture_counter < gesture_time) begin
+                gesture_counter <= gesture_counter + 1;
+                if (left_btn) begin
                     gesture_counter <= 0;
-                    start <= 1'b1;
-                    right_ges <= 1'b1;
+                    machine_state <= 1'b0;
+                    left_ges <= 1'b0;
+                    right_ges <= 1'b0;
+                    left_begin <= 1'b0;
+                    right_begin <= 1'b0;
+                    start <= 1'b0;
+
+                    second_counter <= 0;
+                    over_shutdown <= 1'b0;
                 end
-                if (left_begin) begin
-                    if (gesture_counter < gesture_time) begin
-                        gesture_counter <= gesture_counter + 1;
-                        if (right_ges) begin
-                            gesture_counter <= 0;
-                            machine_state <= 1'b1;
-                            left_ges <= 1'b0;
-                            right_ges <= 1'b0;
-                            left_begin <= 1'b0;
-                            right_begin <= 1'b0;
-                            start <= 1'b0;
-                        end
-                    end else begin
-                        gesture_counter <= 0;
-                        left_ges <= 1'b0;
-                        right_ges <= 1'b0;
-                        left_begin <= 1'b0;
-                        right_begin <= 1'b0;
-                        start <= 1'b0;
-                    end
-                end
-                if (right_begin) begin
-                    if (gesture_counter < gesture_time) begin
-                        gesture_counter <= gesture_counter + 1;
-                        if (left_ges) begin
-                            gesture_counter <= 0;
-                            machine_state <= 1'b0;
-                            left_ges <= 1'b0;
-                            right_ges <= 1'b0;
-                            left_begin <= 1'b0;
-                            right_begin <= 1'b0;
-                            start <= 1'b0;
-                        end
-                    end else begin
-                        gesture_counter <= 0;
-                        left_ges <= 1'b0;
-                        right_ges <= 1'b0;
-                        left_begin <= 1'b0;
-                        right_begin <= 1'b0;
-                        start <= 1'b0;
-                    end
-                end
+            end else begin
+                gesture_counter <= 0;
+                left_ges <= 1'b0;
+                right_ges <= 1'b0;
+                left_begin <= 1'b0;
+                right_begin <= 1'b0;
+                start <= 1'b0;
+            end
+        end
     end
 end
 
