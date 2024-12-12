@@ -29,7 +29,7 @@ input right_btn,              // 右键
 input gesture_btn_state,      // 1: 切换到手势按键
 
 input on_off_btn,             // 开关机按钮
-output machine_state          // 开机状态
+output machine_state,          // 开机状态
 
 input menu_btn,               // 菜单按钮（非待机模式按菜单键返回待机）
 input mode1_btn,              // 1档按钮
@@ -76,6 +76,19 @@ output [4:0] led              // LED信号
         .led_mode3(led_mode3)
     );
 
+    selfcleaner selfcleaner(
+        .clk(clk),
+        .rst(rst),
+        .mode_state(mode_state),        // 传递模式状态
+        .menu_btn(menu_btn),
+        .self_clean_btn(self_clean_btn),
+        .digit1(digit1),                // 数码管显示的数字1
+        .digit2(digit2),                // 数码管显示的数字2
+        .tube_sel(tube_sel),            // 数码管选择信号
+        .led_self_clean(led_self_clean)
+    );
+
+
     //实例化模式选择模块
     mode_fsm mode_fsm_inst (
         .clk(clk),
@@ -88,6 +101,10 @@ output [4:0] led              // LED信号
         .mode_state(mode_state),
         .led(led)
     );
+
+
+
+
 
 endmodule
 

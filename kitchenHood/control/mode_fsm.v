@@ -26,9 +26,10 @@ input menu_btn,
 input mode1_btn,
 input mode2_btn,
 input mode3_btn,
+input machine_state,
 input mode_self_clean_btn,
-output[2:0] mode_state,
-output[4:0] led
+output reg [2:0] mode_state,
+output reg [4:0] led
 );
 
 always @ (posedge clk or negedge rst) begin
