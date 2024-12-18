@@ -30,8 +30,7 @@ module smoker (
     output [7:0] digit1,          // 数码管显示的数字1
     output [7:0] digit2,          // 数码管显示的数字2
     output [7:0] tube_sel,        // 数码管选择信号
-    output reg led_mode1, led_mode2, led_mode3,
-    output reg [2:0] mode_state_fix
+    output reg [2:0] mode_state_fix //更新mode_state(三档自动关闭时会更新为二挡，传回top中重新给mode_state赋值)
 );
 
     // wire clk_1hz;
@@ -63,19 +62,12 @@ module smoker (
             countdown_time_min <= 1;
             is_in_hurricane_mode <= 0;
             hurricane_mode_enabled <= 1;
-            led_mode1 <= 0;
-            led_mode2 <= 0;
-            led_mode3 <= 0;
         end else begin
             if (mode_state == 3'b000) begin
             // 待机模式
-            led_mode1 <=0;
-            led_mode2 <=0;
-            led_mode3 <=0;
             end else if (mode_state == 3'b001) begin
             // 1档风力
-            led_mode1 <=1;
-            begin // 1档风力模式
+            begin 
                     if (cumulative_time_sec == 59) begin
                         cumulative_time_sec <= 0;
                         if (cumulative_time_min == 59) begin
@@ -89,8 +81,7 @@ module smoker (
                 end
             end else if (mode_state == 3'b010) begin
             // 2档风力
-            led_mode2 <=1;
-            begin // 2档风力模式
+            begin 
                     if (cumulative_time_sec == 59) begin
                         cumulative_time_sec <= 0;
                         if (cumulative_time_min == 59) begin
@@ -107,15 +98,12 @@ module smoker (
             is_in_hurricane_mode <= 1;
             countdown_time_min <= 1;  // 设置1分钟倒计时
             countdown_time_sec <= 0;
-            led_mode3 <=1;
-            begin // 飓风模式
+            begin 
                     if (is_in_hurricane_mode) begin
                         if (countdown_time_sec == 0 && countdown_time_min == 0) begin
                             mode_state_fix <= 2;  // 倒计时结束，自动切换到2档
                             is_in_hurricane_mode <= 0;
                             hurricane_mode_enabled <= 0;  // 只能使用一次
-                            led_mode3 <=0;
-                            led_mode2 <=1;
                         end else if (countdown_time_sec == 0) begin
                             if (countdown_time_min > 0) begin
                                 countdown_time_min <= countdown_time_min - 1;
