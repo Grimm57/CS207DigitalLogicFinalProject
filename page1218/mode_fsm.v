@@ -28,14 +28,14 @@ input mode2_btn,
 input mode3_btn,
 input mode_self_clean_btn,
 input machine_state,
-output[2:0] reg mode_state,
-output[4:0] reg led     // led = {self_clean, mode3, mode2, mode 1, standby}
+output reg [2:0]  mode_state,
+output reg  menu_btn_state,
+output reg [4:0]  led     // led = {self_clean, mode3, mode2, mode1, standby}
 );
 
-reg menu_btn_state;
-
-parameter minute = 6_000_000_000;
-parameter three_minute = 18_000_000_000;
+integer second;
+parameter minute = 60;
+parameter three_minute = 180;
 
 reg begin_count;
 integer time_count;
@@ -47,15 +47,23 @@ always @ (posedge clk or negedge rst) begin
         menu_btn_state <= 1'b0;
         begin_count <= 1'b0;
         time_count <= 0;
+        second <= 0;
+
     end else begin
         if (machine_state) begin
             // 设备开启时，按菜单按钮切换风力模式
+            
             if (menu_btn) begin
                 menu_btn_state <= ~menu_btn_state;
             end
 
             if (begin_count) begin
                 time_count <= time_count + 1;
+            end
+
+            if (time_count == 1_00_000_000) begin
+                second <= second + 1;
+                time_count <= 0;
             end
 
             if (menu_btn_state & mode_state == 3'b000) begin
@@ -65,6 +73,7 @@ always @ (posedge clk or negedge rst) begin
                     menu_btn_state <= 1'b0;
                     begin_count <= 1'b0;
                     time_count <= 0;
+                    second <= 0;
                 end
                 else if (mode2_btn) begin
                     mode_state <= 3'b010;
@@ -72,6 +81,7 @@ always @ (posedge clk or negedge rst) begin
                     menu_btn_state <= 1'b0;
                     begin_count <= 1'b0;
                     time_count <= 0;
+                    second <= 0;
                 end
                 else if (mode3_btn) begin
                     mode_state <= 3'b011;
@@ -79,6 +89,7 @@ always @ (posedge clk or negedge rst) begin
                     menu_btn_state <= 1'b0;
                     begin_count <= 1'b0;
                     time_count <= 0;
+                    second <= 0;
                     // 没有实现对于 60s 倒计时结束回 2档的操作，现在只写了按菜单键60s后返回待机模式
                 end
                 else if (mode_self_clean_btn) begin
@@ -87,15 +98,17 @@ always @ (posedge clk or negedge rst) begin
                     menu_btn_state <= 1'b0;
                     begin_count <= 1'b1;
                     time_count <= 0;
+                    second <= 0;
                 end
             end
             else if (~(mode_state == 3'b000))begin
                 if (menu_btn_state & (mode_state == 3'b001 | mode_state == 3'b010)) begin
                     mode_state <= 3'b000;
-                    led <= 5'b00000;
+                    led <= 5'b00001;
                     menu_btn_state <= 1'b0;
                     begin_count <= 1'b0;
                     time_count <= 0;
+                    second <= 0;
                 end else if (mode_state == 3'b001) begin
                     if (mode2_btn) begin
                         mode_state <= 3'b010;
@@ -103,6 +116,7 @@ always @ (posedge clk or negedge rst) begin
                         menu_btn_state <= 1'b0;
                         begin_count <= 1'b0;
                         time_count <= 0;
+                        second <= 0;
                     end
                 end else if (mode_state == 3'b010) begin
                     if (mode1_btn) begin
@@ -111,28 +125,35 @@ always @ (posedge clk or negedge rst) begin
                         menu_btn_state <= 1'b0;
                         begin_count <= 1'b0;
                         time_count <= 0;
+                        second <= 0;
+
                     end
                 end else if (mode_state == 3'b011) begin
                     if (menu_btn_state) begin
                         begin_count <= 1'b1;
                         time_count <= 0;
+                        second <= 0;
                         menu_btn_state <= 1'b0;
                     end
 
-                    if (time_count == minute) begin
+                    if (second == minute) begin
                         mode_state <= 3'b000;
                         led <= 5'b00001;
                         menu_btn_state <= 1'b0;
                         begin_count <= 1'b0;
                         time_count <= 0;
+                        second <= 0;
+
                     end
                 end else if (mode_state == 3'b100) begin
-                    if (time_count == three_minute) begin
+                    if (second == three_minute) begin
                         mode_state <= 3'b000;
-                        led <= 5'b00000;
+                        led <= 5'b00001;
                         menu_btn_state <= 1'b0;
                         begin_count <= 1'b0;
                         time_count <= 0;
+                        second <= 0;
+
                     end
                 end
             end
@@ -146,6 +167,8 @@ always @ (posedge clk or negedge rst) begin
             menu_btn_state <= 1'b0;
             begin_count <= 1'b0;
             time_count <= 0;
+            second <= 0;
+
         end
     end
 end
