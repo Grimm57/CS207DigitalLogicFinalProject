@@ -25,6 +25,7 @@ input clk,                    // 时钟信号
 input rst,                    // 复位信号
 
 input page1_btn,              // 1: 切换到一二三档按键
+input page2_btn,              // 1: 切换到时间调整相关按键
 input page4_btn,              // 1: 切换到手势按键
 
 output machine_state,          // 开机状态
@@ -61,11 +62,29 @@ output [2:0] btn_led
     wire gesture_right;
     assign gesture_right = page4_btn & right_btn;
     
+    wire [3:0] time_adjust_btn;
+    assign time_adjust_btn = {page2_btn & down_btn,page2_btn & right_btn,page2_btn & left_btn,page2_btn & up_btn};
+
+
     assign btn_led[2] = mode1_btn;
     assign btn_led[1] = mode2_btn;
     assign btn_led[0] = mode3_btn;
 
+    
 
+    reg [7:0] digit1_out_top;         // 数码管显示的数字1
+    reg [7:0] digit2_out_top;         // 数码管显示的数字1
+    reg [7:0] tube_sel_out_top;         // 数码管显示的数字1
+
+    wire [7:0] digit1_out_smoker;         // 数码管显示的数字1
+    wire [7:0] digit2_out_smoker;         // 数码管显示的数字1
+    wire [7:0] tube_sel_out_smoker;         // 数码管显示的数字1
+
+    wire [7:0] digit1_out_time;         // 数码管显示的数字1
+    wire [7:0] digit2_out_time;         // 数码管显示的数字1
+    wire [7:0] tube_sel_out_time;         // 数码管显示的数字1
+
+    
 
     //实例化1Hz分频器
     ClockDivider1Hz clock1hzzzz(.clk(clk),.rst(rst),.clk_out(clk_1hz));
@@ -82,7 +101,14 @@ output [2:0] btn_led
 
     wire [2:0] mode_state;      // 模式状态 000待机 001一档 010二档 011三档（飓风） 100自清洁
     
-    wire[4:0] light;
+    // 定义状态编码
+    parameter daiji = 3'b000;    
+    parameter yidang = 3'b001;  
+    parameter erdang = 3'b010; 
+    parameter sandang = 3'b011; 
+    parameter ziqingjie = 3'b100; 
+
+
     //实例化油烟机模块
     smoker smoker_inst (
         .clk(clk),
@@ -92,9 +118,9 @@ output [2:0] btn_led
         .mode1_btn(mode1_btn),
         .mode2_btn(mode2_btn),
         .mode3_btn(mode3_btn),
-        .digit1(digit1),                // 数码管显示的数字1
-        .digit2(digit2),                // 数码管显示的数字2
-        .tube_sel(tube_sel)             // 数码管选择信号
+        .digit1(digit1_out_smoker),                // 数码管显示的数字1
+        .digit2(digit2_out_smoker),                // 数码管显示的数字2
+        .tube_sel(tube_sel_out_smoker)             // 数码管选择信号
     );
 
     //实例化模式选择模块
@@ -110,4 +136,31 @@ output [2:0] btn_led
         .led(led)
     );
 
+    wire [5:0] location_led;
+    currentTime u_currentTime (
+    .clk(clk),                     // 连接系统时钟
+    .rst(rst),                     // 连接复位信号
+    .btn(time_adjust_btn),                     // 连接按钮输入
+    .digit1(digit1_out_time),               // 连接数字管显示 1
+    .digit2(digit2_out_time),               // 连接数字管显示 2
+    .tube_sel(tube_sel_out_time),           // 连接显示管选择
+    .time_adjust_led(time_adjust_led),  // 连接时间调整 LED 指示
+    .location_led(location_led)    // 连接位置 LED
+    );
+
+    always @(*) begin
+        if (machine_state)begin
+            case(mode_state)
+                daiji:begin digit1_out_top = digit1_out_time;digit2_out_top = digit2_out_time;tube_sel_out_top = tube_sel_out_time;  end
+                default:begin digit1_out_top = digit1_out_time;digit2_out_top = digit2_out_time;tube_sel_out_top = tube_sel_out_time;  end
+            endcase
+        end else begin
+            digit1_out_top = 6'b000000;
+            digit2_out_top = 6'b000000;
+            tube_sel_out_top = 6'b000000;
+        end
+    end
+    assign digit1 = digit1_out_top;
+    assign digit2 = digit2_out_top;
+    assign tube_sel = tube_sel_out_top;
 endmodule
