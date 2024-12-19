@@ -139,11 +139,11 @@ module smoker (
     end
 
     // 控制显示切换
-    reg display_select;  // 用于选择显示哪个时间（0: 累计时间, 1: 倒计时）
-    always @(posedge clk_1hz or negedge rst) begin
+    reg display_select =0;  // 用于选择显示哪个时间（0: 累计时间, 1: 倒计时）
+    always @(posedge clk or negedge rst) begin
         if (!rst) begin
             display_select <= 0;  // 复位时，默认显示累计时间
-        end else if (mode_state == 3'b010 || mode_state == 3'b001) begin
+        end else if (mode_state == 3'b010 | mode_state == 3'b001) begin
             display_select <= 0;  // 显示累计时间
         end else if (mode_state == 3'b011) begin
             display_select <= 1;  // 在飓风模式下显示倒计时
