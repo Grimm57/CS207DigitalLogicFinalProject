@@ -28,7 +28,8 @@ module smoker (
     output [7:0] digit2,          // 数码管显示的数字2
     output [7:0] tube_sel,        // 数码管选择信号
     output reg return_state,      //输出三档结束后要变回的状态
-    output reg hurricane_mode_enabled    // 飓风模式是否可以启用（只能使用一次）
+    output reg hurricane_mode_enabled,    // 飓风模式是否可以启用（只能使用一次）
+    output reg meun_btn_pressed //用来看是否在三档时按下了菜单键
 );
 
     wire clk_1hz;
@@ -40,7 +41,7 @@ module smoker (
     
     // 控制风力模式
 
-    reg meun_btn_pressed; //用来看是否在三档时按下了菜单键
+    
     
 
     // 计时信号
@@ -58,6 +59,7 @@ module smoker (
             countdown_time_min <= 1;
             hurricane_mode_enabled <= 1;
             meun_btn_pressed <=0;
+            return_state <=1;
         end else begin
             if (mode_state == 3'b001) begin
             // 1档风力
