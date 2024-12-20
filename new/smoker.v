@@ -23,14 +23,12 @@ module smoker (
     input clk,                    // 原始时钟信号（例如500Hz）
     input rst,                    // 复位信号
     input [2:0] mode_state,       // 当前工作模式输入（0：待机，1：1档，2：2档，3：3档）
-    input menu_btn,               // 菜单按钮
-    input mode1_btn,              // 1档按钮
-    input mode2_btn,              // 2档按钮
-    input mode3_btn,              // 3档按钮
+    input menu_btn,               //用于按下菜单键60s关闭三档
     output [7:0] digit1,          // 数码管显示的数字1
     output [7:0] digit2,          // 数码管显示的数字2
     output [7:0] tube_sel,        // 数码管选择信号
-    output reg led_mode1, led_mode2, led_mode3
+    output reg return_state,      //输出三档结束后要变回的状态
+    output reg hurricane_mode_enabled    // 飓风模式是否可以启用（只能使用一次）
 );
 
     wire clk_1hz;
@@ -41,9 +39,8 @@ module smoker (
     );
     
     // 控制风力模式
-    reg [2:0] wind_mode;           // 当前风力档位，0: 待机，1: 1档，2: 2档，3: 3档（飓风模式）
-    reg is_in_hurricane_mode;      // 是否在飓风模式中
-    reg hurricane_mode_enabled;    // 飓风模式是否启用（只能使用一次）
+
+    reg meun_btn_pressed; //用来看是否在三档时按下了菜单键
     
 
     // 计时信号
@@ -55,48 +52,29 @@ module smoker (
     // 控制风力模式
     always @(posedge clk_1hz or negedge rst) begin
         if (!rst) begin
-            wind_mode <= 0;  // 默认待机模式
             cumulative_time_sec <= 0;
             cumulative_time_min <= 0;
             countdown_time_sec <= 0;
             countdown_time_min <= 1;
-            is_in_hurricane_mode <= 0;
             hurricane_mode_enabled <= 1;
-            led_mode1 <= 0;
-            led_mode2 <= 0;
-            led_mode3 <= 0;
+            meun_btn_pressed <=0;
         end else begin
-            if (mode_state == 3'b000) begin
-            // 待机模式
-            wind_mode <= 0;
-            led_mode1 <=0;
-            led_mode2 <=0;
-            led_mode3 <=0;
-            end else if (mode_state == 3'b001) begin
+            if (mode_state == 3'b001) begin
             // 1档风力
-            wind_mode <= 1;
-            led_mode1 <=1;
+                if (cumulative_time_sec == 59) 
+                    begin
+                        cumulative_time_sec <= 0;
+                        if (cumulative_time_min == 59) begin
+                            cumulative_time_min <= 0;
+                        end else begin
+                            cumulative_time_min <= cumulative_time_min + 1;
+                        end
+                    end else begin
+                        cumulative_time_sec <= cumulative_time_sec + 1;
+                end
             end else if (mode_state == 3'b010) begin
             // 2档风力
-            wind_mode <= 2;
-            led_mode2 <=1;
-            end else if (mode_state == 3'b011 && hurricane_mode_enabled && !is_in_hurricane_mode) begin
-            // 飓风模式
-            wind_mode <= 3;
-            is_in_hurricane_mode <= 1;
-            countdown_time_min <= 1;  // 设置1分钟倒计时
-            countdown_time_sec <= 0;
-            led_mode3 <=1;
-            end
-
-            case (wind_mode)
-                3'b000: begin // 待机模式
-                    led_mode1 <= 0;
-                    led_mode2 <= 0;
-                    led_mode3 <= 0;
-                end
-                3'b001: begin // 1档风力模式
-                    if (cumulative_time_sec == 59) begin
+                if (cumulative_time_sec == 59) begin
                         cumulative_time_sec <= 0;
                         if (cumulative_time_min == 59) begin
                             cumulative_time_min <= 0;
@@ -105,28 +83,20 @@ module smoker (
                         end
                     end else begin
                         cumulative_time_sec <= cumulative_time_sec + 1;
-                    end
                 end
-                3'b010: begin // 2档风力模式
-                    if (cumulative_time_sec == 59) begin
-                        cumulative_time_sec <= 0;
-                        if (cumulative_time_min == 59) begin
-                            cumulative_time_min <= 0;
-                        end else begin
-                            cumulative_time_min <= cumulative_time_min + 1;
-                        end
+            end else if (mode_state == 3'b011 & hurricane_mode_enabled) begin
+                if(menu_btn) begin
+                    meun_btn_pressed <=1;
+                end
+                if (countdown_time_sec == 0 & countdown_time_min == 0) begin  //倒计时结束，返回某个状态
+                    if(meun_btn_pressed)begin
+                        //回到待机
+                        return_state <=0;
                     end else begin
-                        cumulative_time_sec <= cumulative_time_sec + 1;
+                        //回到二挡
+                        return_state <=1;
                     end
-                end
-                3'b011: begin // 飓风模式
-                    if (is_in_hurricane_mode) begin
-                        if (countdown_time_sec == 0 && countdown_time_min == 0) begin
-                            wind_mode <= 2;  // 倒计时结束，自动切换到2档
-                            is_in_hurricane_mode <= 0;
-                            hurricane_mode_enabled <= 0;  // 只能使用一次
-                            led_mode3 <=0;
-                            led_mode2 <=1;
+                    hurricane_mode_enabled <= 0;  // 只能使用一次
                         end else if (countdown_time_sec == 0) begin
                             if (countdown_time_min > 0) begin
                                 countdown_time_min <= countdown_time_min - 1;
@@ -134,10 +104,9 @@ module smoker (
                             end
                         end else begin
                             countdown_time_sec <= countdown_time_sec - 1;
-                        end
-                    end
                 end
-            endcase
+                    
+            end
         end
     end
 
@@ -169,13 +138,13 @@ module smoker (
     end
 
     // 控制显示切换
-    reg display_select;  // 用于选择显示哪个时间（0: 累计时间, 1: 倒计时）
-    always @(posedge clk_1hz or negedge rst) begin
+    reg display_select =0;  // 用于选择显示哪个时间（0: 累计时间, 1: 倒计时）
+    always @(posedge clk or negedge rst) begin
         if (!rst) begin
             display_select <= 0;  // 复位时，默认显示累计时间
-        end else if (wind_mode == 3'b010 || wind_mode == 3'b001) begin
+        end else if (mode_state == 3'b010 | mode_state == 3'b001) begin
             display_select <= 0;  // 显示累计时间
-        end else if (wind_mode == 3'b011) begin
+        end else if (mode_state == 3'b011) begin
             display_select <= 1;  // 在飓风模式下显示倒计时
         end
     end
