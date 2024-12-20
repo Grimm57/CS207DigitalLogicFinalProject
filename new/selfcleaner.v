@@ -23,10 +23,6 @@
 module selfcleaner(
     input clk,
     input rst,
-    input [2:0] mode_state,      
-    input menu_btn,
-    input self_clean_btn,
-    output reg led_self_clean,
     output [7:0] digit1,
     output [7:0] digit2,
     output [7:0] tube_sel
@@ -40,9 +36,6 @@ module selfcleaner(
     );
     
 
-    wire [7:0] clean_digit1, clean_digit2, clean_tube_sel;
-    reg [7:0] digit1_reg, digit2_reg, tube_sel_reg;
-
     reg [5:0] sec = 0;          //倒计时秒数
     reg [5:0] minute = 3;       //倒计时分钟数
 
@@ -53,7 +46,6 @@ module selfcleaner(
             minute <= 3;  // 复位时分钟数重新设置为 3
             sec <= 0;     // 复位时秒数重新设置为 0
         end else begin
-            if (mode_state == 3'b100) begin
                 // 自清洁模式开始时进行倒计时
                 if (sec == 0 && minute > 0) begin
                     sec <= 59;     // 秒数归零后重置为 59
@@ -61,17 +53,8 @@ module selfcleaner(
                 end else if (sec > 0) begin
                     sec <= sec - 1; // 每秒倒计时减 1
                 end
-            end
         end
 
-    end
-
-    always @(minute or sec) begin
-        if (minute == 0 && sec == 0) begin
-            led_self_clean <= 1;  // 倒计时结束，设置指示器为1
-        end else begin
-            led_self_clean <= 0;  // 倒计时未结束，保持指示器为0
-        end
     end
 
     reg [31:0] time_data;
@@ -98,11 +81,6 @@ module selfcleaner(
         .tube_sel(tube_sel)
     );
   
-
-    // 输出信号
-    assign digit1 = digit1_reg;
-    assign digit2 = digit2_reg;
-    assign tube_sel = tube_sel_reg;
 
 endmodule
 
