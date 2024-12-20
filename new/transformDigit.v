@@ -15,7 +15,7 @@ module transformDigit(
             4'b1000: digit = 8'b1111_1110; //"8": abcdefg_
             4'b1001: digit = 8'b1110_0110; //"9": abc_ _ fg_
             default: 
-            digit = 8'b1001_1110;  //"E": a_ _ defg_
+            digit = 8'b0000_0010;  //"E": a_ _ defg_
         endcase
     end
 endmodule
