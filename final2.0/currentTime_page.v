@@ -90,7 +90,7 @@ module currentTime(
             min <= 6'd0;
             hr <= 5'd0;
         end else begin
-            if (key_rise_edge == DOWN) begin  // 按下 DOWN 按钮，切换时间调整模式
+            if (key_rise_edge == DOWN & machine_state) begin  // 按下 DOWN 按钮，切换时间调整模式
                 time_adjust_mode <= ~time_adjust_mode;
             end
 
