@@ -43,6 +43,7 @@ output [7:0] digit2,          // 数码管显示的数字2
 output [7:0] tube_sel,        // 数码管选择信号
 output meun_btn_pressed,
 output [4:0] led,              // LED信号
+output needClean,
 output return_state
     );
     wire clk_1hz;             // 1Hz 时钟信号
@@ -91,6 +92,7 @@ output return_state
     wire [7:0] digit2_out_time;         // 数码管显示的数字1
     wire [7:0] tube_sel_out_time;         // 数码管显示的数字1
 
+
     
 
     //实例化1Hz分频器
@@ -115,7 +117,7 @@ output return_state
     parameter MODE2          = 3'b010;
     parameter MODE3          = 3'b011;
     parameter SELF_CLEAN     = 3'b100;
-    parameter showCulmulative_time = 3'b111;
+    parameter show_Culmulative_time = 3'b111;
 
 
     //实例化油烟机模块
@@ -129,7 +131,8 @@ output return_state
         .tube_sel(tube_sel_out_smoker),
         .return_state(return_state),
         .hurricane_mode_enabled(hurricane_mode_enabled),
-        .meun_btn_pressed(meun_btn_pressed)
+        .meun_btn_pressed(meun_btn_pressed),
+        .needClean(needClean)
     );
     
 
@@ -201,7 +204,7 @@ output return_state
                     tube_sel_out_top = tube_sel_out_time;  
                 end
 
-                showCulmulative_time:begin
+                show_Culmulative_time:begin
                     digit1_out_top = digit1_out_smoker;
                     digit2_out_top =digit1_out_smoker;
                     tube_sel_out_top = tube_sel_out_smoker;  
