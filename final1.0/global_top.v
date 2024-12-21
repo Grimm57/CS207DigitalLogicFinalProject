@@ -37,6 +37,7 @@ input left_btn,               // 左按钮
 input middle_btn,             // 中按钮
 input right_btn,              // 右按钮
 input down_btn,               // 下按钮
+input handClean,              //手动自清洁
 
 output [7:0] digit1,          // 数码管显示的数字1
 output [7:0] digit2,          // 数码管显示的数字2
@@ -132,7 +133,9 @@ output return_state
         .return_state(return_state),
         .hurricane_mode_enabled(hurricane_mode_enabled),
         .meun_btn_pressed(meun_btn_pressed),
-        .needClean(needClean)
+        .needClean(needClean),
+        .handClean(handClean),
+        .machine_state(machine_state)
     );
     
 
