@@ -30,6 +30,7 @@ input mode_self_clean_btn,
 input machine_state,
 input return_state,
 input hurricane_mode_enabled,
+input show_culmulative_time,
 output reg [2:0]  mode_state,
 output reg  menu_btn_state,
 output reg [4:0]  led     // led = {self_clean, mode3, mode2, mode1, standby}
@@ -107,6 +108,13 @@ always @ (posedge clk or negedge rst) begin
                     begin_count <= 1'b1;      //一进入自清洁立马开始倒计时180s
                     time_count <= 0;
                     second <= 0;
+                end 
+                else if(show_culmulative_time) begin
+                    mode_state <= 3'b111;
+                    menu_btn_state <= 1'b0;
+                    begin_count <= 1'b0;
+                    time_count <= 0;
+                    second <= 0;
                 end
             end
             else if (~(mode_state == 3'b000))begin// 不为待机状态时 或者 为待机但没按菜单键（但不会进入下面任何一个if else结构，不执行任何命令） （与上面的if其实是递进关系）
@@ -178,6 +186,15 @@ always @ (posedge clk or negedge rst) begin
                         time_count <= 0;
                         second <= 0;
 
+                    end
+                end
+                else if(mode_state == 3'b111) begin
+                    if(menu_btn) begin
+                        mode_state <= 3'b000;
+                        menu_btn_state <= 1'b0;
+                        begin_count <= 1'b0;
+                        time_count <= 0;
+                        second <= 0;
                     end
                 end
             end
