@@ -29,6 +29,7 @@ module smoker (
     output [7:0] tube_sel,        // 数码管选择信号
     output reg return_state,      //输出三档结束后要变回的状态
     output reg hurricane_mode_enabled,    // 飓风模式是否可以启用（只能使用一次）
+    output reg needClean,
     output reg meun_btn_pressed //用来看是否在三档时按下了菜单键
 );
 
@@ -123,6 +124,16 @@ module smoker (
                 end                   
             end
         end    
+    end
+
+    always @(posedge clk or negedge rst) begin
+        if(~rst) begin
+            needClean<=0;
+        end else begin
+        if(cumulative_time_sec >=15)begin
+            needClean <=1;
+        end
+        end
     end
 
 
