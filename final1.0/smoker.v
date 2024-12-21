@@ -24,6 +24,8 @@ module smoker (
     input rst,                    // 复位信号
     input [2:0] mode_state,       // 当前工作模式输入（0：待机，1：1档，2：2档，3：3档）
     input menu_btn,               //用于按下菜单键60s关闭三档
+    input handClean,
+    input machine_state,
     output [7:0] digit1,          // 数码管显示的数字1
     output [7:0] digit2,          // 数码管显示的数字2
     output [7:0] tube_sel,        // 数码管选择信号
@@ -51,6 +53,10 @@ module smoker (
     // 控制风力模式
     always @(posedge clk_1hz or negedge rst) begin
         if (!rst) begin
+            cumulative_time_hour <=0;
+            cumulative_time_sec <= 0;
+            cumulative_time_min <= 0;
+        end else if(handClean)begin
             cumulative_time_hour <=0;
             cumulative_time_sec <= 0;
             cumulative_time_min <= 0;
@@ -130,11 +136,14 @@ module smoker (
         if(~rst) begin
             needClean<=0;
         end else begin
-        if(cumulative_time_sec >=15)begin
+        if(cumulative_time_sec >=15 & machine_state)begin
             needClean <=1;
+        end else begin
+            needClean <=0;
         end
         end
     end
+                                                                            
 
 
     // 将累计时间转换为time_data格式
