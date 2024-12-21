@@ -93,6 +93,8 @@ output return_state
     wire [7:0] digit2_out_time;         // 数码管显示的数字1
     wire [7:0] tube_sel_out_time;         // 数码管显示的数字1
 
+    wire clearTime;
+
 
     
 
@@ -135,7 +137,8 @@ output return_state
         .meun_btn_pressed(meun_btn_pressed),
         .needClean(needClean),
         .handClean(handClean),
-        .machine_state(machine_state)
+        .machine_state(machine_state),
+        .clearTime(clearTime)
     );
     
 
@@ -167,7 +170,9 @@ output return_state
     .digit2(digit2_out_time),               // 连接数字管显示 2
     .tube_sel(tube_sel_out_time),           // 连接显示管选择
     .time_adjust_led(time_adjust_led),  // 连接时间调整 LED 指示
-    .location_led(location_led)    // 连接位置 LED
+    .location_led(location_led),    // 连接位置 LED
+    .middle_btn(middle_btn),
+    .machine_state(machine_state)
     );
     
     //自清洁模块
@@ -177,7 +182,8 @@ output return_state
     .mode_state(mode_state),
     .digit1(digit1_out_selfClean),               // 连接数字管显示 1
     .digit2(digit1_out_selfClean),               // 连接数字管显示 2
-    .tube_sel(tube_sel_out_selfClean)           // 连接显示管选择
+    .tube_sel(tube_sel_out_selfClean),           // 连接显示管选择
+    .clear_accumulated_time(clearTime)
     );
 
     
