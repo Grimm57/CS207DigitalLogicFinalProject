@@ -30,11 +30,12 @@ input mode_self_clean_btn,
 input machine_state,
 input return_state,
 input hurricane_mode_enabled,
-input show_culmulative_time,
 output reg [2:0]  mode_state,
 output reg  menu_btn_state,
 output reg [4:0]  led     // led = {self_clean, mode3, mode2, mode1, standby}
 );
+
+reg machine_state_prev;
 
 integer second;
 parameter minute = 6;
@@ -52,6 +53,8 @@ always @ (posedge clk or negedge rst) begin
         begin_count <= 1'b0;
         time_count <= 0;
         second <= 0;
+
+        machine_state_prev <= 1'b0;
 
     end else begin
         if (machine_state) begin
@@ -106,13 +109,6 @@ always @ (posedge clk or negedge rst) begin
                     led <= 5'b10000;
                     menu_btn_state <= 1'b0;
                     begin_count <= 1'b1;      //一进入自清洁立马开始倒计时180s
-                    time_count <= 0;
-                    second <= 0;
-                end 
-                else if(show_culmulative_time) begin
-                    mode_state <= 3'b111;
-                    menu_btn_state <= 1'b0;
-                    begin_count <= 1'b0;
                     time_count <= 0;
                     second <= 0;
                 end
@@ -188,16 +184,11 @@ always @ (posedge clk or negedge rst) begin
 
                     end
                 end
-                else if(mode_state == 3'b111) begin
-                    if(menu_btn) begin
-                        mode_state <= 3'b000;
-                        menu_btn_state <= 1'b0;
-                        begin_count <= 1'b0;
-                        time_count <= 0;
-                        second <= 0;
-                    end
+            end else begin
+                if (~machine_state_prev) begin
+                    led <= 5'b00001;
                 end
-            end
+            end 
 
             // ###### 设置相关的按钮还没做 
             // 或者另开一个设置module
@@ -209,8 +200,9 @@ always @ (posedge clk or negedge rst) begin
             begin_count <= 1'b0;
             time_count <= 0;
             second <= 0;
-
         end
+
+        machine_state_prev <= machine_state;
     end
 end
 
