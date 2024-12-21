@@ -53,10 +53,6 @@ module smoker (
             cumulative_time_hour <=0;
             cumulative_time_sec <= 0;
             cumulative_time_min <= 0;
-            countdown_time_sec <= 0;
-            countdown_time_min <= 1;
-            hurricane_mode_enabled <= 1;
-            meun_btn_pressed <=0;
         end else begin
             if (mode_state == 3'b001) begin
             // 1档风力
@@ -87,10 +83,27 @@ module smoker (
                     end else begin
                         cumulative_time_sec <= cumulative_time_sec + 1;
                 end
-            end else if (mode_state == 3'b011 & hurricane_mode_enabled) begin
-                if(menu_btn) begin
-                    meun_btn_pressed <=1;
-                end
+            end 
+        end
+    end
+
+    always @(posedge clk or negedge rst) begin
+        if(~rst) begin
+            meun_btn_pressed <=0;
+        end else begin
+        if(menu_btn & mode_state==3'b011 & hurricane_mode_enabled) begin
+            meun_btn_pressed <=1;
+        end
+        end
+    end
+
+    always @(posedge clk_1hz or negedge rst) begin
+        if(~rst)begin
+            countdown_time_sec <= 0;
+            countdown_time_min <= 1;
+            hurricane_mode_enabled <= 1;
+        end else begin
+            if (mode_state == 3'b011 & hurricane_mode_enabled) begin
                 if (countdown_time_sec == 0 & countdown_time_min == 0) begin  //倒计时结束，返回某个状态
                     if(meun_btn_pressed)begin
                         //回到待机
@@ -100,16 +113,16 @@ module smoker (
                         return_state <=1;
                     end
                     hurricane_mode_enabled <= 0;  // 只能使用一次
-                        end else if (countdown_time_sec == 0) begin
+                end else if (countdown_time_sec == 0) begin
                             if (countdown_time_min > 0) begin
                                 countdown_time_min <= countdown_time_min - 1;
                                 countdown_time_sec <= 59;
                             end
-                        end else begin
+                end else begin
                             countdown_time_sec <= countdown_time_sec - 1;
                 end                   
             end
-        end
+        end    
     end
 
 
