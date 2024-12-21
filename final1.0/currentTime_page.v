@@ -34,6 +34,9 @@ module currentTime(
     output reg [5:0] location_led
     );
 
+    reg machine_state_prev;
+
+
     // 定义按钮编码
     parameter UP = 4'b0001;    // 按钮 1
     parameter LEFT = 4'b0010;  // 按钮 2
@@ -138,14 +141,16 @@ module currentTime(
                 counter <= counter + 1;
             end
 
-            if (~machine_state) begin
-                if (middle_btn) begin
+            if (machine_state) begin
+                if (~machine_state_prev) begin
                 counter <= 0;
                 sec <= 6'd0;
                 min <= 6'd0;
                 hr <= 5'd0;
-        end
+                end
             end
+
+            machine_state_prev <= machine_state;
         end
 
     end
