@@ -26,20 +26,34 @@ module selfcleaner(
     input [2:0] mode_state,
     output [7:0] digit1,
     output [7:0] digit2,
-    output [7:0] tube_sel
+    output [7:0] tube_sel,
+    output reg clear_accumulated_time
 );
 
-    reg [5:0] sec = 0;          //倒计时秒数
-    reg [5:0] minute = 3;       //倒计时分钟数
+    reg [5:0] sec = 10;          //倒计时秒数
+    reg [5:0] minute = 0;       //倒计时分钟数
     integer counter=0;
+
+    reg [2:0] prev_mode_state;   // 记录上一个模式状态
+
 
     // 自清洁模式的倒计时
     always @(posedge clk or negedge rst) begin
         if (!rst) begin
-            minute <= 3;  // 复位时分钟数重新设置为 3
-            sec <= 0;     // 复位时秒数重新设置为 0
+            minute <= 0;  // 复位时分钟数重新设置为 3
+            sec <= 10;     // 复位时秒数重新设置为 0
             counter <= 0; // 计数器复位
+            clear_accumulated_time <= 0; //无需清零累计时间
+            prev_mode_state <= 3'b000; // 上一个状态置为初始值
+
         end else begin
+            // 检查mode_state是否从 100 转变为其它状态
+            if (prev_mode_state == 3'b100 && mode_state != 3'b100) begin
+                clear_accumulated_time <= ~clear_accumulated_time;  // 反转clear_accumulated_time
+            end
+            
+            prev_mode_state <= mode_state;  // 更新prev_mode_state为当前mode_state
+
             if (mode_state == 3'b100) begin  // 当处于自清洁模式时开始倒计时
                 // 计数器逻辑：每当系统时钟的计数器到达 100,000,000 时，表示 1 秒
                 if (counter == 99_999_999) begin
@@ -49,13 +63,13 @@ module selfcleaner(
                         minute <= minute - 1;  // 分钟数减 1
                     end else if (sec > 0) begin
                         sec <= sec - 1;  // 每秒钟减 1
-                    end
+                    end 
                 end else begin
                     counter <= counter + 1;  // 每个时钟周期计数 +1
                 end
             end else begin
-                 minute <= 3;  // 复位时分钟数重新设置为 3
-                 sec <= 0;     // 复位时秒数重新设置为 0
+                 minute <= 0;  // 复位时分钟数重新设置为 3
+                 sec <= 10;     // 复位时秒数重新设置为 0
                  counter <= 0; // 计数器复位
             end
         end
