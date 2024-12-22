@@ -41,7 +41,7 @@ reg menu_btn_prev;
 
 integer second;
 parameter minute = 6;
-parameter three_minute = 18;
+parameter three_minute = 10;
 
 reg begin_count;
 integer time_count;
@@ -188,6 +188,14 @@ always @ (posedge clk or negedge rst) begin
                         time_count <= 0;
                         second <= 0;
 
+                    end
+                end else if(mode_state == 3'b111) begin
+                    if(menu_btn) begin
+                        mode_state <= 3'b000;
+                        menu_btn_state <= 1'b0;
+                        begin_count <= 1'b0;
+                        time_count <= 0;
+                        second <= 0;
                     end
                 end
             end else begin
