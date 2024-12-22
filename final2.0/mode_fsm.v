@@ -30,6 +30,7 @@ input mode_self_clean_btn,
 input machine_state,
 input return_state,
 input show_culmulative_time,
+input show_gesture_time,
 input hurricane_mode_enabled,
 output reg [2:0]  mode_state,
 output reg  menu_btn_state,
@@ -112,7 +113,12 @@ always @ (posedge clk or negedge rst) begin
                     second <= 0;
                 end else if(show_culmulative_time) begin
                     mode_state <= 3'b111;
-
+                    menu_btn_state <= 1'b0;
+                    begin_count <= 1'b0;
+                    time_count <= 0;
+                    second <= 0;
+                end else if (show_gesture_time) begin
+                    mode_state <= 3'b110;
                     menu_btn_state <= 1'b0;
                     begin_count <= 1'b0;
                     time_count <= 0;
@@ -190,6 +196,14 @@ always @ (posedge clk or negedge rst) begin
 
                     end
                 end else if(mode_state == 3'b111) begin
+                    if(menu_btn) begin
+                        mode_state <= 3'b000;
+                        menu_btn_state <= 1'b0;
+                        begin_count <= 1'b0;
+                        time_count <= 0;
+                        second <= 0;
+                    end
+                end else if(mode_state == 3'b110) begin
                     if(menu_btn) begin
                         mode_state <= 3'b000;
                         menu_btn_state <= 1'b0;

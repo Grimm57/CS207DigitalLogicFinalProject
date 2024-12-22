@@ -24,6 +24,7 @@ module light(
 input clk,
 input rst,
 input light_sw,
+input machine_state,
 output reg light_led
     );
     
@@ -32,8 +33,10 @@ output reg light_led
             light_led <= 1'b0;
         end
         else begin
-            if (light_sw) light_led <= 1'b1;
-            else light_led <= 1'b0;
+            if (machine_state) begin
+                if (light_sw) light_led <= 1'b1;
+                else light_led <= 1'b0;
+            end
         end
     end
 endmodule

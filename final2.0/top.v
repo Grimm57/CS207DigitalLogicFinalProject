@@ -39,6 +39,9 @@ input right_btn,              // 右按钮
 input down_btn,               // 下按钮
 input handClean,              //手动自清洁
 
+input light_sw,
+output light_led,
+
 output [7:0] digit1,          // 数码管显示的数字1
 output [7:0] digit2,          // 数码管显示的数字2
 output [7:0] tube_sel,        // 数码管选择信号
@@ -68,6 +71,9 @@ output return_state
     wire show_culmulative_time;
     assign show_culmulative_time= page0_btn & left_btn;
 
+    wire show_gesture_time;
+    assign show_gesture_time = page0_btn & right_btn;
+
 
     wire gesture_left;
     assign gesture_left = page4_btn & left_btn;
@@ -93,6 +99,10 @@ output return_state
     wire [7:0] digit2_out_time;         // 数码管显示的数字1
     wire [7:0] tube_sel_out_time;         // 数码管显示的数字1
 
+    wire [7:0] digit1_out_gesture;         // 数码管显示的数字1
+    wire [7:0] digit2_out_gesture;         // 数码管显示的数字1
+    wire [7:0] tube_sel_out_gesture;         // 数码管显示的数字1
+
     wire clearTime;
 
     //实例化1Hz分频器
@@ -106,7 +116,12 @@ output return_state
     .right_btn(gesture_right),
     .on_off_btn(on_off_btn),
     .gesture_btn_state(page4_btn),
-    .machine_state(machine_state));
+    .machine_state(machine_state),
+
+    .digit1(digit1_out_gesture),
+    .digit2(digit2_out_gesture),
+    .tube_sel(tube_sel_out_gesture)
+    );
 
     wire [2:0] mode_state;      // 模式状态 000待机 001一档 010二档 011三档（飓风） 100自清洁
     wire hurricane_mode_enabled;
@@ -117,6 +132,7 @@ output return_state
     parameter MODE2          = 3'b010;
     parameter MODE3          = 3'b011;
     parameter SELF_CLEAN     = 3'b100;
+    parameter show_Gesture_time = 3'b110;
     parameter show_Culmulative_time = 3'b111;
 
 
@@ -154,6 +170,7 @@ output return_state
         .led(led),
         .return_state(return_state),
         .show_culmulative_time(show_culmulative_time),
+        .show_gesture_time(show_gesture_time),
         .hurricane_mode_enabled(hurricane_mode_enabled)
     );
 
@@ -181,6 +198,14 @@ output return_state
     .digit2(digit1_out_selfClean),               // 连接数字管显示 2
     .tube_sel(tube_sel_out_selfClean),           // 连接显示管选择
     .clear_accumulated_time(clearTime)
+    );
+
+    light light_inst(
+    .clk(clk),
+    .rst(rst),
+    .machine_state(machine_state),
+    .light_sw(light_sw),
+    .light_led(light_led)
     );
 
     
@@ -212,8 +237,14 @@ output return_state
 
                 show_Culmulative_time:begin
                     digit1_out_top = digit1_out_smoker;
-                    digit2_out_top =digit1_out_smoker;
+                    digit2_out_top = digit1_out_smoker;
                     tube_sel_out_top = tube_sel_out_smoker;  
+                end
+
+                show_Gesture_time: begin
+                    digit1_out_top = digit1_out_gesture;
+                    digit2_out_top = digit1_out_gesture;
+                    tube_sel_out_top = tube_sel_out_gesture;
                 end
 
                 default:begin digit1_out_top = digit1_out_smoker;
