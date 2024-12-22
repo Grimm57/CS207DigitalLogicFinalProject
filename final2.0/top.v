@@ -95,6 +95,9 @@ output return_state
 
     wire clearTime;
 
+
+    
+
     //实例化1Hz分频器
     ClockDivider1Hz clock1hzzzz(.clk(clk),.rst(rst),.clk_out(clk_1hz));
     
