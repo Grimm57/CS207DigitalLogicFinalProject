@@ -45,6 +45,7 @@ parameter three_minute = 10;
 reg menu_btn_pressed = 1'b0 ;
 reg begin_count;
 integer time_count;
+integer counter_temp;
 
 always @ (posedge clk or negedge rst) begin
     if (~rst) begin
@@ -54,7 +55,7 @@ always @ (posedge clk or negedge rst) begin
         begin_count <= 1'b0;
         time_count <= 0;
         second <= 0;
-
+        counter_temp<=0;
         machine_state_prev <= 1'b0;
 
     end else begin
@@ -164,21 +165,28 @@ always @ (posedge clk or negedge rst) begin
                     //     second <= 0;
                     // end
                     if(~hurricane_mode_enabled) begin //hurricane_mode_enabled=1时候是可以进入三档，hurricane_mode_enabled=0是不能进入三档
-                    if(return_state) begin   //按下了菜单键，return_state=1,回2挡
+                    if(return_state) begin   //没按菜单键，return_state=1,回2挡
                         mode_state <= 3'b010;
                         led <= 5'b00100;
                         menu_btn_state <= 1'b0;
                         begin_count <= 1'b0;
                         time_count <= 0;
                         second <= 0;
-                    end else begin  //没按菜单键，return_state=0,回待机
-                        mode_state <= 3'b000;       
+                    end else begin  //按了菜单键，return_state=0,回待机
+                        mode_state <= 3'b010;  //善意利用特性   
                         led <= 5'b00001;
                         menu_btn_state <= 1'b0;
                         begin_count <= 1'b0;
                         time_count <= 0;
                         second <= 0;
-                    end
+                    if(mode_state == 3'b010) begin 
+                        if(counter_temp == 99_999_999)begin
+                        mode_state <=3'b000;    //回到待机
+                    end else begin
+                        counter_temp <= counter_temp + 1;
+                        end 
+                       end
+                      end 
                     end
                 end else if (mode_state == 3'b100) begin  //自清洁时倒计时180s
                     if (second == three_minute) begin   //180s后返回待机状态
