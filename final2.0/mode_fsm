@@ -40,7 +40,7 @@ reg machine_state_prev;
 
 integer second;
 parameter minute = 6;
-parameter three_minute = 18;
+parameter three_minute = 10;
 
 reg menu_btn_pressed = 1'b0 ;
 reg begin_count;
@@ -114,7 +114,6 @@ always @ (posedge clk or negedge rst) begin
                     second <= 0;
                 end else if(show_culmulative_time) begin
                     mode_state <= 3'b111;
-
                     menu_btn_state <= 1'b0;
                     begin_count <= 1'b0;
                     time_count <= 0;
