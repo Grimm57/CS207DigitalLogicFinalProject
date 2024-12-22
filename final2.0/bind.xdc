@@ -4,9 +4,11 @@ set_property IOSTANDARD LVCMOS33 [get_ports rst]
 set_property PACKAGE_PIN P15 [get_ports rst]
 set_property PACKAGE_PIN P17 [get_ports clk]
 
+set_property IOSTANDARD LVCMOS33 [get_ports pageneg1_btn]
 set_property IOSTANDARD LVCMOS33 [get_ports page0_btn]
 set_property IOSTANDARD LVCMOS33 [get_ports page1_btn]
 set_property IOSTANDARD LVCMOS33 [get_ports page2_btn]
+set_property IOSTANDARD LVCMOS33 [get_ports page3_btn]
 set_property IOSTANDARD LVCMOS33 [get_ports page4_btn]
 
 set_property IOSTANDARD LVCMOS33 [get_ports up_btn]
@@ -16,9 +18,11 @@ set_property IOSTANDARD LVCMOS33 [get_ports right_btn]
 set_property IOSTANDARD LVCMOS33 [get_ports down_btn]
 
 
+set_property PACKAGE_PIN P3 [get_ports pageneg1_btn]
 set_property PACKAGE_PIN P2 [get_ports page0_btn]
 set_property PACKAGE_PIN R2 [get_ports page1_btn]
 set_property PACKAGE_PIN M4 [get_ports page2_btn]
+set_property PACKAGE_PIN N4 [get_ports page3_btn]
 set_property PACKAGE_PIN R1 [get_ports page4_btn]
 set_property PACKAGE_PIN R15 [get_ports middle_btn]
 set_property PACKAGE_PIN V1 [get_ports left_btn]
