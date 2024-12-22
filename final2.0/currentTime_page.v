@@ -49,33 +49,34 @@ module currentTime(
 
     integer counter;     // 系统时钟计数器，用于生成秒级时钟
 
-    reg [3:0] key_vc;
-    reg [3:0] key_vp;
-    reg [19:0] keycnt;
+    reg [3:0] btn_current;//表示当前的按钮状态
+    reg [3:0] btn_prev;//表示上一个按钮状态
+    
+    reg [19:0] constantCount;
 
     always @(posedge clk or negedge rst) begin
         if(!rst)
             begin
-                keycnt <= 0;
-                key_vc <= 4'd0;
+                constantCount <= 0;
+                btn_current <= 4'd0;
             end
         else
             begin
-            if(keycnt>=20'd999_999)
+            if(constantCount>=20'd999_999)
                 begin
-                keycnt <= 0;
-                key_vc <= btn;
+                constantCount <= 0;
+                btn_current <= btn;
                 end
-            else    keycnt<=keycnt+20'd1;
+            else    constantCount<=constantCount+20'd1;
             end
     end
 
     always @(posedge clk) begin
-        key_vp <= key_vc;
+        btn_prev <= btn_current;
     end
 
-    wire [3:0]key_rise_edge;
-    assign key_rise_edge = (~key_vp[3:0])&key_vc[3:0];
+    wire [3:0]btn_rise_edge;
+    assign btn_rise_edge = (~btn_prev[3:0])&btn_current[3:0];
 
     // 时间调节模式
     reg time_adjust_mode;
@@ -90,7 +91,7 @@ module currentTime(
             min <= 6'd0;
             hr <= 5'd0;
         end else begin
-            if (key_rise_edge == DOWN & machine_state) begin  // 按下 DOWN 按钮，切换时间调整模式
+            if (btn_rise_edge == DOWN & machine_state) begin  // 按下 DOWN 按钮，切换时间调整模式
                 time_adjust_mode <= ~time_adjust_mode;
             end
 
@@ -113,7 +114,7 @@ module currentTime(
                     sec <= sec + 1;
                 end 
             end else if (time_adjust_mode) begin
-                case(key_rise_edge)
+                case(btn_rise_edge)
                     UP: begin location[5:0]={location[4:0],location[5]};   end
 
                     RIGHT: 
