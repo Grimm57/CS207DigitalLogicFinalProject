@@ -1,0 +1,776 @@
+#-----------------------------------------------------------
+# Vivado v2017.4 (64-bit)
+# SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+# IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+# Start of session at: Sun Dec 22 22:24:16 2024
+# Process ID: 1724
+# Current directory: C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.runs/synth_1
+# Command line: vivado.exe -log top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top.tcl
+# Log file: C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.runs/synth_1/top.vds
+# Journal file: C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source top.tcl -notrace
+Command: synth_design -top top -part xc7a35tcsg324-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 19504 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:01 ; elapsed = 00:00:02 . Memory (MB): peak = 331.262 ; gain = 100.949
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'top' [C:/Users/21333/Desktop/kitchenHood/global_top.v:23]
+	Parameter STANDBY bound to: 3'b000 
+	Parameter MODE1 bound to: 3'b001 
+	Parameter MODE2 bound to: 3'b010 
+	Parameter MODE3 bound to: 3'b011 
+	Parameter SELF_CLEAN bound to: 3'b100 
+	Parameter show_Gesture_time bound to: 3'b110 
+	Parameter show_Anouncement_time bound to: 3'b101 
+	Parameter show_Culmulative_time bound to: 3'b111 
+INFO: [Synth 8-638] synthesizing module 'ClockDivider1Hz' [C:/Users/21333/Desktop/kitchenHood/time/ClockDivider1Hz.v:1]
+	Parameter period bound to: 100000000 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'ClockDivider1Hz' (1#1) [C:/Users/21333/Desktop/kitchenHood/time/ClockDivider1Hz.v:1]
+INFO: [Synth 8-638] synthesizing module 'onOffControl' [C:/Users/21333/Desktop/kitchenHood/control/onOffControl.v:23]
+	Parameter shutdown_time bound to: 300000000 - type: integer 
+	Parameter second bound to: 100000000 - type: integer 
+	Parameter UP bound to: 4'b0001 
+	Parameter LEFT bound to: 4'b0010 
+	Parameter RIGHT bound to: 4'b0100 
+	Parameter DOWN bound to: 4'b1000 
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/21333/Desktop/kitchenHood/control/onOffControl.v:122]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/21333/Desktop/kitchenHood/control/onOffControl.v:127]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/21333/Desktop/kitchenHood/control/onOffControl.v:118]
+INFO: [Synth 8-638] synthesizing module 'timeDisplay' [C:/Users/21333/Desktop/kitchenHood/time/TimeDisplay.v:1]
+INFO: [Synth 8-638] synthesizing module 'ClockDivider500Hz' [C:/Users/21333/Desktop/kitchenHood/time/ClockDivider500Hz.v:1]
+	Parameter period bound to: 100000 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'ClockDivider500Hz' (2#1) [C:/Users/21333/Desktop/kitchenHood/time/ClockDivider500Hz.v:1]
+INFO: [Synth 8-638] synthesizing module 'transformDigit' [C:/Users/21333/Desktop/kitchenHood/time/transformDigit.v:1]
+INFO: [Synth 8-256] done synthesizing module 'transformDigit' (3#1) [C:/Users/21333/Desktop/kitchenHood/time/transformDigit.v:1]
+INFO: [Synth 8-256] done synthesizing module 'timeDisplay' (4#1) [C:/Users/21333/Desktop/kitchenHood/time/TimeDisplay.v:1]
+INFO: [Synth 8-256] done synthesizing module 'onOffControl' (5#1) [C:/Users/21333/Desktop/kitchenHood/control/onOffControl.v:23]
+INFO: [Synth 8-638] synthesizing module 'smoker' [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:22]
+	Parameter UP bound to: 4'b0001 
+	Parameter LEFT bound to: 4'b0010 
+	Parameter RIGHT bound to: 4'b0100 
+	Parameter DOWN bound to: 4'b1000 
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:282]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:364]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:274]
+WARNING: [Synth 8-5788] Register return_state_reg in module smoker is has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:226]
+INFO: [Synth 8-256] done synthesizing module 'smoker' (6#1) [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:22]
+INFO: [Synth 8-638] synthesizing module 'mode_fsm' [C:/Users/21333/Desktop/kitchenHood/control/mode_fsm.v:22]
+	Parameter minute bound to: 6 - type: integer 
+	Parameter three_minute bound to: 10 - type: integer 
+WARNING: [Synth 8-6014] Unused sequential element counter_temp_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/control/mode_fsm.v:63]
+WARNING: [Synth 8-6014] Unused sequential element counter_temp2_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/control/mode_fsm.v:64]
+WARNING: [Synth 8-6014] Unused sequential element menu_btn_pressed_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/control/mode_fsm.v:77]
+INFO: [Synth 8-256] done synthesizing module 'mode_fsm' (7#1) [C:/Users/21333/Desktop/kitchenHood/control/mode_fsm.v:22]
+INFO: [Synth 8-638] synthesizing module 'currentTime' [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/current_time_display.v:22]
+	Parameter UP bound to: 4'b0001 
+	Parameter LEFT bound to: 4'b0010 
+	Parameter RIGHT bound to: 4'b0100 
+	Parameter DOWN bound to: 4'b1000 
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/current_time_display.v:125]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/current_time_display.v:207]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/current_time_display.v:117]
+INFO: [Synth 8-256] done synthesizing module 'currentTime' (8#1) [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/current_time_display.v:22]
+INFO: [Synth 8-638] synthesizing module 'selfcleaner' [C:/Users/21333/Desktop/kitchenHood/mode/selfcleaner.v:23]
+INFO: [Synth 8-256] done synthesizing module 'selfcleaner' (9#1) [C:/Users/21333/Desktop/kitchenHood/mode/selfcleaner.v:23]
+INFO: [Synth 8-638] synthesizing module 'light' [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/Light.v:23]
+INFO: [Synth 8-256] done synthesizing module 'light' (10#1) [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/Light.v:23]
+INFO: [Synth 8-226] default block is never used [C:/Users/21333/Desktop/kitchenHood/global_top.v:233]
+WARNING: [Synth 8-3848] Net digit2_out_selfClean in module/entity top does not have driver. [C:/Users/21333/Desktop/kitchenHood/global_top.v:110]
+INFO: [Synth 8-256] done synthesizing module 'top' (11#1) [C:/Users/21333/Desktop/kitchenHood/global_top.v:23]
+WARNING: [Synth 8-3331] design currentTime has unconnected port middle_btn
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:01 ; elapsed = 00:00:03 . Memory (MB): peak = 392.738 ; gain = 162.426
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:01 ; elapsed = 00:00:03 . Memory (MB): peak = 392.738 ; gain = 162.426
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7a35tcsg324-1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/constrs_1/new/fsmtest.xdc]
+Finished Parsing XDC File [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/constrs_1/new/fsmtest.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/constrs_1/new/fsmtest.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/top_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 728.645 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:03 ; elapsed = 00:00:09 . Memory (MB): peak = 728.645 ; gain = 498.332
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35tcsg324-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:03 ; elapsed = 00:00:09 . Memory (MB): peak = 728.645 ; gain = 498.332
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:03 ; elapsed = 00:00:09 . Memory (MB): peak = 728.645 ; gain = 498.332
+---------------------------------------------------------------------------------
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "clk_out" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "clk_out" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-4471] merging register 'left_ges_reg' into 'left_begin_reg' [C:/Users/21333/Desktop/kitchenHood/control/onOffControl.v:102]
+WARNING: [Synth 8-6014] Unused sequential element left_ges_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/control/onOffControl.v:102]
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "machine_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "gesture_counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "gesture_counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "gesture_counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5544] ROM "location" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second_counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second_counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+WARNING: [Synth 8-6014] Unused sequential element constantCount_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/control/onOffControl.v:70]
+INFO: [Synth 8-4471] merging register 'resetCountdown_reg' into 'meun_btn_pressed_reg' [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:173]
+WARNING: [Synth 8-6014] Unused sequential element resetCountdown_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:173]
+INFO: [Synth 8-5546] ROM "cumulative_time_hour" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5545] ROM "cumulative_time_sec" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5546] ROM "cumulative_time_min" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "c" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "cnt" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5544] ROM "location" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "display_select" won't be mapped to Block RAM because address size (3) smaller than threshold (5)
+WARNING: [Synth 8-6014] Unused sequential element constantCount_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:66]
+WARNING: [Synth 8-6014] Unused sequential element countdown_time_min_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:204]
+INFO: [Synth 8-5544] ROM "cumulative_time_hour" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "cumulative_time_sec" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "cumulative_time_min" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5545] ROM "c" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "cnt" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5544] ROM "location" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "display_select" won't be mapped to Block RAM because address size (3) smaller than threshold (5)
+INFO: [Synth 8-5545] ROM "mode_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "menu_btn_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "menu_btn_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "mode_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "menu_btn_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "menu_btn_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5544] ROM "mode_state" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "led" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "led" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5546] ROM "sec" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "min" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5544] ROM "min" won't be mapped to Block RAM because address size (3) smaller than threshold (5)
+INFO: [Synth 8-5546] ROM "hr" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5544] ROM "hr" won't be mapped to Block RAM because address size (3) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "location" won't be mapped to Block RAM because address size (4) smaller than threshold (5)
+WARNING: [Synth 8-6014] Unused sequential element constantCount_reg was removed.  [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/current_time_display.v:60]
+WARNING: [Synth 8-6014] Unused sequential element counter_reg was removed.  [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/current_time_display.v:89]
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:11 . Memory (MB): peak = 728.645 ; gain = 498.332
+---------------------------------------------------------------------------------
+INFO: [Synth 8-223] decloning instance 'timeDisplay:/transformDigit1' (transformDigit) to 'timeDisplay:/transformDigit2'
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 15    
+	   2 Input      7 Bit       Adders := 2     
+	   2 Input      6 Bit       Adders := 34    
+	   2 Input      5 Bit       Adders := 10    
++---Registers : 
+	               32 Bit    Registers := 19    
+	                8 Bit    Registers := 7     
+	                7 Bit    Registers := 1     
+	                6 Bit    Registers := 16    
+	                5 Bit    Registers := 3     
+	                4 Bit    Registers := 6     
+	                3 Bit    Registers := 2     
+	                2 Bit    Registers := 2     
+	                1 Bit    Registers := 35    
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 72    
+	   3 Input     32 Bit        Muxes := 1     
+	   4 Input      8 Bit        Muxes := 3     
+	   2 Input      7 Bit        Muxes := 3     
+	   2 Input      6 Bit        Muxes := 71    
+	   3 Input      6 Bit        Muxes := 5     
+	   4 Input      6 Bit        Muxes := 10    
+	   7 Input      6 Bit        Muxes := 4     
+	   2 Input      5 Bit        Muxes := 27    
+	   4 Input      5 Bit        Muxes := 3     
+	   5 Input      5 Bit        Muxes := 1     
+	   7 Input      5 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 4     
+	   5 Input      3 Bit        Muxes := 1     
+	   7 Input      3 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   3 Input      2 Bit        Muxes := 1     
+	   8 Input      2 Bit        Muxes := 4     
+	   2 Input      1 Bit        Muxes := 208   
+	   3 Input      1 Bit        Muxes := 4     
+	   4 Input      1 Bit        Muxes := 9     
+	   5 Input      1 Bit        Muxes := 1     
+	   7 Input      1 Bit        Muxes := 5     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module top 
+Detailed RTL Component Info : 
++---Registers : 
+	                8 Bit    Registers := 3     
++---Muxes : 
+	   4 Input      8 Bit        Muxes := 3     
+	   8 Input      2 Bit        Muxes := 3     
+Module ClockDivider1Hz 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 1     
+Module ClockDivider500Hz 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 1     
+Module timeDisplay 
+Detailed RTL Component Info : 
++---Registers : 
+	                8 Bit    Registers := 1     
+Module onOffControl 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 3     
+	   2 Input      6 Bit       Adders := 5     
++---Registers : 
+	               32 Bit    Registers := 3     
+	                6 Bit    Registers := 1     
+	                4 Bit    Registers := 2     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 8     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 23    
+	   2 Input      6 Bit        Muxes := 20    
+	   3 Input      6 Bit        Muxes := 5     
+	   4 Input      6 Bit        Muxes := 4     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 80    
+	   3 Input      1 Bit        Muxes := 2     
+	   4 Input      1 Bit        Muxes := 1     
+Module smoker 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 3     
+	   2 Input      7 Bit       Adders := 2     
+	   2 Input      6 Bit       Adders := 17    
+	   2 Input      5 Bit       Adders := 5     
++---Registers : 
+	               32 Bit    Registers := 7     
+	                7 Bit    Registers := 1     
+	                6 Bit    Registers := 10    
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 2     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 12    
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 10    
+	   3 Input     32 Bit        Muxes := 1     
+	   2 Input      7 Bit        Muxes := 3     
+	   2 Input      6 Bit        Muxes := 34    
+	   4 Input      6 Bit        Muxes := 4     
+	   2 Input      5 Bit        Muxes := 17    
+	   4 Input      5 Bit        Muxes := 2     
+	   3 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 30    
+	   4 Input      1 Bit        Muxes := 3     
+	   5 Input      1 Bit        Muxes := 1     
+	   3 Input      1 Bit        Muxes := 2     
+Module mode_fsm 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 2     
++---Registers : 
+	               32 Bit    Registers := 2     
+	                5 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 4     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 31    
+	   2 Input      5 Bit        Muxes := 1     
+	   5 Input      5 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 4     
+	   5 Input      3 Bit        Muxes := 1     
+	   7 Input      3 Bit        Muxes := 1     
+	   8 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 68    
+	   7 Input      1 Bit        Muxes := 2     
+	   4 Input      1 Bit        Muxes := 1     
+Module currentTime 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      6 Bit       Adders := 10    
+	   2 Input      5 Bit       Adders := 5     
++---Registers : 
+	                6 Bit    Registers := 3     
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 2     
+	                1 Bit    Registers := 3     
++---Muxes : 
+	   2 Input      6 Bit        Muxes := 14    
+	   7 Input      6 Bit        Muxes := 4     
+	   4 Input      6 Bit        Muxes := 2     
+	   2 Input      5 Bit        Muxes := 9     
+	   7 Input      5 Bit        Muxes := 2     
+	   4 Input      5 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 19    
+	   4 Input      1 Bit        Muxes := 4     
+	   7 Input      1 Bit        Muxes := 3     
+Module selfcleaner 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+	   2 Input      6 Bit       Adders := 2     
++---Registers : 
+	               32 Bit    Registers := 1     
+	                6 Bit    Registers := 2     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 2     
+	   2 Input      6 Bit        Muxes := 3     
+	   2 Input      1 Bit        Muxes := 5     
+Module light 
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 1     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 90 (col length:60)
+BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "clk_out" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "timeDisplay/ClockDivider500Hz/counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "timeDisplay/ClockDivider500Hz/clk_out" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second_counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "gesture_counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "gesture_counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+WARNING: [Synth 8-6014] Unused sequential element constantCount_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/control/onOffControl.v:70]
+INFO: [Synth 8-5545] ROM "counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "clk_out" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "ClockDivider500Hz/counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "ClockDivider500Hz/clk_out" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "cnt" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "c" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+WARNING: [Synth 8-6014] Unused sequential element countdown_time_min_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:204]
+WARNING: [Synth 8-6014] Unused sequential element constantCount_reg was removed.  [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:66]
+DSP Report: Generating DSP needClean4, operation Mode is: A*(B:0x3c).
+DSP Report: operator needClean4 is absorbed into DSP needClean4.
+DSP Report: Generating DSP needClean2, operation Mode is: PCIN+(A:0xe10)*B.
+DSP Report: operator needClean2 is absorbed into DSP needClean2.
+DSP Report: operator needClean3 is absorbed into DSP needClean2.
+DSP Report: Generating DSP needClean4, operation Mode is: (A:0xe10)*B.
+DSP Report: operator needClean4 is absorbed into DSP needClean4.
+INFO: [Synth 8-5545] ROM "mode_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "time_count" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "second" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "menu_btn_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "menu_btn_state" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "timeDisplay/ClockDivider500Hz/counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "timeDisplay/ClockDivider500Hz/clk_out" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+WARNING: [Synth 8-6014] Unused sequential element constantCount_reg was removed.  [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/current_time_display.v:60]
+WARNING: [Synth 8-6014] Unused sequential element counter_reg was removed.  [C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.srcs/sources_1/new/current_time_display.v:89]
+INFO: [Synth 8-5545] ROM "timeDisplay/ClockDivider500Hz/counter" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-5545] ROM "timeDisplay/ClockDivider500Hz/clk_out" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+WARNING: [Synth 8-3331] design currentTime has unconnected port middle_btn
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[8]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[8]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[8]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[20]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[20]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[20]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[24]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[28]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[9]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[9]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[9]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[21]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[21]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[21]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[25]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[29]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[10]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[10]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[10]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[22]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[22]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[22]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[26]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[30]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[30]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[7]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[7]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[11]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[11]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[11]' (FDS) to 'smoker_inst/countdown_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[19]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[19]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/anouncement_time_data_reg[19]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[23]' (FDS) to 'smoker_inst/anouncement_time_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[23]' (FDS) to 'smoker_inst/anouncement_time_data_reg[23]'
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (smoker_inst/\anouncement_time_data_reg[23] )
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[27]' (FDR) to 'smoker_inst/countdown_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/countdown_time_data_reg[31]' (FDR) to 'smoker_inst/anouncement_time_data_reg[31]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/cumulative_time_data_reg[31]' (FDR) to 'smoker_inst/anouncement_time_data_reg[31]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (smoker_inst/\anouncement_time_data_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\digit2_out_top_reg[0] )
+INFO: [Synth 8-3886] merging instance 'smoker_inst/display_data_reg[9]' (FDE) to 'smoker_inst/display_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/display_data_reg[21]' (FDE) to 'smoker_inst/display_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/display_data_reg[8]' (FDE) to 'smoker_inst/display_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/display_data_reg[20]' (FDE) to 'smoker_inst/display_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/display_data_reg[10]' (FDE) to 'smoker_inst/display_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/display_data_reg[22]' (FDE) to 'smoker_inst/display_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/display_data_reg[11]' (FDE) to 'smoker_inst/display_data_reg[23]'
+INFO: [Synth 8-3886] merging instance 'smoker_inst/display_data_reg[19]' (FDE) to 'smoker_inst/display_data_reg[31]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (smoker_inst/\display_data_reg[31] )
+WARNING: [Synth 8-3332] Sequential element (counter_reg[31]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[30]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[29]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[28]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[27]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[26]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[25]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[24]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[23]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[22]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[21]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[20]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[19]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[18]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[17]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[16]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[15]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[14]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[13]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[12]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[11]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[10]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[9]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[8]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[7]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[6]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[5]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[4]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[3]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[2]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[1]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (counter_reg[0]) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (clk_out_reg) is unused and will be removed from module ClockDivider1Hz.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[31]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[30]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[29]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[28]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[27]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[26]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[25]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[24]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[23]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[22]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[21]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[20]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[19]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[18]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[17]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[16]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[15]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[14]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[13]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[12]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[11]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[10]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[9]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[8]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[7]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[6]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[5]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[4]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[3]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[2]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[1]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/counter_reg[0]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (u_clk_divider/clk_out_reg) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (display_data_reg[31]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (anouncement_time_data_reg[23]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (anouncement_time_data_reg[31]) is unused and will be removed from module smoker.
+WARNING: [Synth 8-3332] Sequential element (time_adjust_led_reg) is unused and will be removed from module currentTime.
+WARNING: [Synth 8-3332] Sequential element (digit2_out_top_reg[0]) is unused and will be removed from module top.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:05 ; elapsed = 00:00:19 . Memory (MB): peak = 728.645 ; gain = 498.332
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+DSP: Preliminary Mapping  Report (see note below)
++------------+------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name | DSP Mapping      | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++------------+------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|smoker      | A*(B:0x3c)       | 6      | 6      | -      | -      | 12     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|smoker      | PCIN+(A:0xe10)*B | 12     | 5      | -      | -      | 17     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|smoker      | (A:0xe10)*B      | 6      | 12     | -      | -      | 18     | 0    | 0    | -    | -    | -     | 0    | 0    | 
++------------+------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:07 ; elapsed = 00:00:26 . Memory (MB): peak = 839.762 ; gain = 609.449
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:07 ; elapsed = 00:00:26 . Memory (MB): peak = 842.031 ; gain = 611.719
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-3332] Sequential element (digit1_out_top_reg[0]) is unused and will be removed from module top.
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (\smoker_inst/display_data_reg[23] )
+WARNING: [Synth 8-3332] Sequential element (smoker_inst/display_data_reg[23]) is unused and will be removed from module top.
+INFO: [Synth 8-5844] Detected registers with asynchronous reset at DSP/BRAM block boundary. Consider using synchronous reset for optimal packing [C:/Users/21333/Desktop/kitchenHood/mode/smoker.v:103]
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:07 ; elapsed = 00:00:26 . Memory (MB): peak = 904.668 ; gain = 674.355
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:07 ; elapsed = 00:00:27 . Memory (MB): peak = 904.668 ; gain = 674.355
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:07 ; elapsed = 00:00:27 . Memory (MB): peak = 904.668 ; gain = 674.355
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:07 ; elapsed = 00:00:27 . Memory (MB): peak = 904.668 ; gain = 674.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:07 ; elapsed = 00:00:27 . Memory (MB): peak = 904.668 ; gain = 674.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:07 ; elapsed = 00:00:27 . Memory (MB): peak = 904.668 ; gain = 674.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:07 ; elapsed = 00:00:27 . Memory (MB): peak = 904.668 ; gain = 674.355
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+--------+------+
+|      |Cell    |Count |
++------+--------+------+
+|1     |BUFG    |     1|
+|2     |CARRY4  |   163|
+|3     |DSP48E1 |     3|
+|4     |LUT1    |    14|
+|5     |LUT2    |   215|
+|6     |LUT3    |   137|
+|7     |LUT4    |   216|
+|8     |LUT5    |   448|
+|9     |LUT6    |   549|
+|10    |MUXF7   |     7|
+|11    |FDCE    |   505|
+|12    |FDPE    |    10|
+|13    |FDRE    |   303|
+|14    |FDSE    |     6|
+|15    |IBUF    |    16|
+|16    |OBUF    |    35|
++------+--------+------+
+
+Report Instance Areas: 
++------+------------------------+--------------------+------+
+|      |Instance                |Module              |Cells |
++------+------------------------+--------------------+------+
+|1     |top                     |                    |  2628|
+|2     |  light_inst            |light               |     1|
+|3     |  mode_fsm_inst         |mode_fsm            |   263|
+|4     |  on_off_control        |onOffControl        |   592|
+|5     |    timeDisplay         |timeDisplay_4       |   111|
+|6     |      ClockDivider500Hz |ClockDivider500Hz_5 |    82|
+|7     |  selfcleaner           |selfcleaner         |   207|
+|8     |    timeDisplay         |timeDisplay_2       |   115|
+|9     |      ClockDivider500Hz |ClockDivider500Hz_3 |    82|
+|10    |  smoker_inst           |smoker              |  1030|
+|11    |    u_time_display      |timeDisplay_0       |   114|
+|12    |      ClockDivider500Hz |ClockDivider500Hz_1 |    83|
+|13    |  u_currentTime         |currentTime         |   461|
+|14    |    timeDisplay         |timeDisplay         |   129|
+|15    |      ClockDivider500Hz |ClockDivider500Hz   |    82|
++------+------------------------+--------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:07 ; elapsed = 00:00:27 . Memory (MB): peak = 904.668 ; gain = 674.355
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 86 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:05 ; elapsed = 00:00:23 . Memory (MB): peak = 904.668 ; gain = 338.449
+Synthesis Optimization Complete : Time (s): cpu = 00:00:07 ; elapsed = 00:00:27 . Memory (MB): peak = 904.668 ; gain = 674.355
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 189 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+196 Infos, 92 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:07 ; elapsed = 00:00:30 . Memory (MB): peak = 904.668 ; gain = 678.895
+INFO: [Common 17-1381] The checkpoint 'C:/Users/21333/Desktop/DigitalLogic/KitchenHoodProject/project_1/project_1.runs/synth_1/top.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file top_utilization_synth.rpt -pb top_utilization_synth.pb
+report_utilization: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.014 . Memory (MB): peak = 904.668 ; gain = 0.000
+INFO: [Common 17-206] Exiting Vivado at Sun Dec 22 22:24:48 2024...
